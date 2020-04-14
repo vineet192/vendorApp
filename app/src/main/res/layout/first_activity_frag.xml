@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/toolbar__"/>
+
+
+        </LinearLayout>
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:background="#ffffff"-->
+        <!--                android:weightSum="2"-->
+        <!--                android:elevation="5dp"-->
+        <!--                android:paddingBottom="7dp">-->
+
+        <!--                <LinearLayout-->
+        <!--                    android:id="@+id/orders_ly"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:orientation="horizontal"-->
+        <!--                    android:background="@drawable/shape"-->
+        <!--                    android:layout_marginRight="30dp"-->
+        <!--                    android:layout_marginLeft="30dp"-->
+        <!--                    android:layout_marginTop="7dp"-->
+        <!--                    android:weightSum="3">-->
+
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/orders_tv"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_width="0dp"-->
+        <!--                        android:layout_weight="2"-->
+        <!--                        android:gravity="right"-->
+        <!--                        android:layout_marginRight="10dp"-->
+        <!--                        android:textSize="15sp"-->
+        <!--                        android:text="Orders"-->
+        <!--                        android:textColor="#000000"/>-->
+
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/orders_cnt_tv"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_width="0dp"-->
+        <!--                        android:layout_weight="1"-->
+        <!--                        android:gravity="left"-->
+        <!--                        android:textSize="15sp"-->
+        <!--                        android:text="(0)"-->
+        <!--                        android:textColor="#000000"/>-->
+
+        <!--                </LinearLayout>-->
+
+
+        <!--                <LinearLayout-->
+        <!--                    android:id="@+id/subscription_ly"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:orientation="horizontal"-->
+        <!--                    android:background="@drawable/shape"-->
+        <!--                    android:layout_marginRight="30dp"-->
+        <!--                    android:layout_marginLeft="30dp"-->
+        <!--                    android:layout_marginTop="7dp"-->
+        <!--                    android:weightSum="4">-->
+
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/subscription_tv"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_width="0dp"-->
+        <!--                        android:layout_weight="3"-->
+        <!--                        android:gravity="right"-->
+        <!--                        android:textSize="15sp"-->
+        <!--                        android:text="Subscription"-->
+        <!--                        android:textColor="#000000"/>-->
+
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/subscription_cnt_tv"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_width="0dp"-->
+        <!--                        android:layout_weight="1"-->
+        <!--                        android:gravity="center"-->
+        <!--                        android:textSize="15sp"-->
+        <!--                        android:text="(0)"-->
+        <!--                        android:textColor="#000000"/>-->
+
+        <!--                </LinearLayout>-->
+
+
+        <!--            </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/quantum_white_100"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:id="@+id/avail_unavail_row">
+
+            <Button
+                android:id="@+id/order_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/click_shape"
+                android:text="Orders"
+                android:textColor="#F05A48"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/subscription_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape"
+                android:padding="16dp"
+                android:text="Subscriptions"
+                android:textColor="@color/quantum_black_100"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragmentcontainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/offline_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="45dp"
+                android:text="BREAK!!!"
+                android:textColor="#A9A9A9"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="You are offline."
+                android:textColor="#696969"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Turn online receive order."
+                android:textColor="#696969"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

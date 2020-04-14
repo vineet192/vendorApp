@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".more_detail">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/ven_image"
+        android:layout_margin="16dp"
+        android:src="@drawable/default_fruit" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ven_id"
+        android:layout_margin="16dp"
+        android:layout_below="@id/ven_image"
+        android:text="ID"
+        android:textSize="24sp"
+        android:textColor="@color/quantum_black_100"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ven_name"
+        android:layout_margin="16dp"
+        android:layout_below="@id/ven_id"
+        android:text="Name"
+        android:textSize="24sp"
+        android:textColor="@color/quantum_black_100"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ven_phone"
+        android:layout_margin="16dp"
+        android:layout_below="@id/ven_name"
+        android:text="Phone Number"
+        android:textSize="24sp"
+        android:textColor="@color/quantum_black_100"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ven_city"
+        android:layout_margin="16dp"
+        android:layout_below="@id/ven_phone"
+        android:text="City"
+        android:textSize="24sp"
+        android:textColor="@color/quantum_black_100"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ven_address"
+        android:layout_margin="16dp"
+        android:layout_below="@id/ven_city"
+        android:text="Address"
+        android:textSize="24sp"
+        android:textColor="@color/quantum_black_100"/>
+</RelativeLayout>

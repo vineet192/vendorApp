@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="#2F9E72"
+    android:layout_margin="5dp"
+    android:layout_height="105dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:gravity="left"
+        android:layout_height="100dp"
+        android:id="@+id/itemImage"
+        android:layout_margin="3dp"
+        android:src="@drawable/cof"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:fontFamily="@font/baloo_chettan"
+                android:id="@+id/itemName"
+                android:text="Hottiee "
+                android:textColor="#020000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:id="@+id/itemCategory"
+                android:fontFamily="@font/baloo_chettan"
+                android:text="Beverages"
+                android:textColor="#000000" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:id="@+id/itemPrice"
+                android:fontFamily="@font/baloo_chettan"
+                android:text="$ 5"
+                android:textColor="#000000" />
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/acceptThisItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#000000"
+            android:theme="@style/MyCheckbox"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:layout_marginLeft="40dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

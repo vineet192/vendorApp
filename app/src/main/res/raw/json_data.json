@@ -1,0 +1,43 @@
+{
+  "date": "26 April 2020",
+  "time": "2:15:56",
+  "order_id":"5d47ec39-2747-4e45-9cde-76633b39197d",
+  "total_price": "500",
+  "delivery_charge": "10",
+  "tax": "20",
+  "items":[
+    {
+      "category_name":"raw",
+      "prod_name":"mango",
+      "prod_id":3,
+      "prod_price":3,
+      "prod_rating":3,
+      "prod_desc":"3",
+      "prod_img":"media/images/clothing.png",
+      "quantity":5,
+      "check":"False"
+    },
+    {
+      "category_name":"raw",
+      "prod_name":"mango",
+      "prod_id":3,
+      "prod_price":3,
+      "prod_rating":3,
+      "prod_desc":"3",
+      "prod_img":"media/images/clothing.png",
+      "quantity":5,
+      "check":"False"
+    },
+    {
+      "category_name":"raw",
+      "prod_name":"grapes",
+      "prod_id":4,
+      "prod_price":4,
+      "prod_rating":4,
+      "prod_desc":"4",
+      "prod_img":"media/images/clothing.png",
+      "quantity":5,
+      "check":"False"
+    }
+  ]
+}

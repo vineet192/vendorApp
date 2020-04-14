@@ -1,0 +1,48 @@
+{
+  "no_sorder": 3,
+  "sorders": [
+    {
+      "sorder_id": "c97d3fec-a448-4deb-bf0a-cbe59748aef8",
+      "startdate": "2020-03-26",
+      "order_status": "A",
+      "total_price": "525",
+      "subs_type": "Weekly",
+      "delivery_boy_phone": [
+        "915312197",
+        "915312197",
+        "915312197",
+        "915312197",
+        "915312197",
+        "915312197"
+      ],
+      "delivery_order_date": [
+        "2020-03-26",
+        "2020-03-26",
+        "2020-03-26",
+        "2020-03-26",
+        "2020-03-26",
+        "2020-03-26"
+      ],
+      "delivery_order_time": [
+        "22:34:57.373",
+        "22:32:14.486",
+        "22:31:07.299",
+        "22:29:12.412",
+        "22:27:33.207",
+        "22:24:56.401"
+      ],
+      "items": [
+        {
+          "prod_id": 3,
+          "prod_name": "mango",
+          "prod_quan": 5,
+          "category_name": "raw",
+          "category_id": 1,
+          "prod_price": 3,
+          "prod_rating": 3.0,
+          "prod_desc": "3"
+        }
+      ]
+    }
+  ]
+}

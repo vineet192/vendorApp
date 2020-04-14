@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/Orders"
+        android:title="Orders"
+        android:icon="@drawable/error"
+        app:showAsAction="ifRoom" >
+    </item>
+<!--    <item-->
+<!--        android:id="@+id/ongoingmenu"-->
+<!--        android:title="Ongoing"-->
+<!--        android:icon="@drawable/ongoing">-->
+<!--    </item>-->
+    <item
+        android:id="@+id/Invenory"
+        android:title="Invenory"
+        android:icon="@drawable/error"
+        app:showAsAction="ifRoom" >
+    </item>
+    <item
+        android:id="@+id/More"
+        android:title="More"
+        android:icon="@drawable/error"
+        app:showAsAction="ifRoom" >
+    </item>
+</menu>

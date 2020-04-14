@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginTop="16dp"
+    android:weightSum="3"
+    android:orientation="horizontal"
+    android:layout_height="48dp">
+
+
+    <include layout="@layout/custom_inventory_tab_item"
+        android:id="@+id/tab_chopped"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:title = "Chopped"/>
+    <include layout="@layout/custom_inventory_tab_item"
+        android:id="@+id/tab_juice"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:title = "Juice"/>
+    <include layout="@layout/custom_inventory_tab_item"
+        android:layout_width="0dp"
+        android:id="@+id/tab_fresh"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:title = "Raw"/>
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_rounded"
+        android:autofillHints="Search Item"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        app:queryHint="Search Item"
+        android:id="@+id/searchNewItems"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/searchNewItems"
+        android:layout_marginBottom="105dp"
+        android:layout_height="wrap_content">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/newItems"
+        android:layout_margin="10dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:id="@+id/footer"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/acceptNew"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:text="Deleivery Boy Details"
+            android:theme="@style/PrimaryButton"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
+            android:id="@+id/declineNew"
+            android:text="Dispatch"
+            android:theme="@style/PrimaryButton"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

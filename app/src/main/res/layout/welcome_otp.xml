@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".LoginActivity">
+
+
+    <Button
+        android:id="@+id/verify_via_call_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="Verify Via Call"
+        android:textAllCaps="false"
+        android:textColor="#0052f2"
+        android:textSize="12dp"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="@id/otp6"
+        app:layout_constraintTop_toBottomOf="@+id/otp6"
+        app:rippleColor="#0052f2" />
+
+    <Button
+        android:id="@+id/skipit2"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:enabled="true"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="Didn't Receive OTP?"
+        android:textAllCaps="false"
+        android:textColor="#333333"
+        android:textSize="12dp"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/verify_via_call_btn"
+        app:layout_constraintTop_toBottomOf="@+id/otp4"
+        app:rippleColor="#ffff" />
+
+    <EditText
+        android:id="@+id/otp6"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLength="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp5"
+        app:layout_constraintTop_toBottomOf="@+id/edit_number_btn" />
+
+    <EditText
+        android:id="@+id/otp3"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLength="1"
+        app:layout_constraintEnd_toStartOf="@+id/otp4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp2"
+        app:layout_constraintTop_toBottomOf="@+id/edit_number_btn" />
+
+    <EditText
+        android:id="@+id/otp4"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLength="1"
+        app:layout_constraintEnd_toStartOf="@+id/otp5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp3"
+        app:layout_constraintTop_toBottomOf="@+id/edit_number_btn" />
+
+    <EditText
+        android:id="@+id/otp5"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLength="1"
+        app:layout_constraintEnd_toStartOf="@+id/otp6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp4"
+        app:layout_constraintTop_toBottomOf="@+id/edit_number_btn" />
+
+    <TextView
+        android:id="@+id/otp_sent_to_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_semibold"
+        android:text="OTP sent to 9023424238"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+
+    <EditText
+        android:id="@+id/otp1"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLength="1"
+        app:layout_constraintEnd_toStartOf="@+id/otp2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_number_btn" />
+
+
+    <EditText
+        android:id="@+id/otp2"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="8dp"
+        android:digits="0123456789"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLength="1"
+        app:layout_constraintEnd_toStartOf="@+id/otp3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/otp1"
+        app:layout_constraintTop_toBottomOf="@+id/edit_number_btn" />
+
+    <Button
+        android:id="@+id/verify_and_proceed_button"
+        style="@style/AccentButton"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Verify And Proceed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/skipit2" />
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/otp_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verify_and_proceed_button"
+        android:layout_margin="16dp" />
+
+    <Button
+        android:id="@+id/edit_number_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="Edit Number"
+        android:textAllCaps="false"
+        android:textColor="#0052f2"
+        android:textSize="12dp"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/otp_sent_to_tv"
+        app:layout_constraintTop_toBottomOf="@+id/otp_sent_to_tv"
+        app:rippleColor="#0052f2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Enter OTP"
+        app:layout_constraintBottom_toTopOf="@+id/otp1"
+        app:layout_constraintStart_toStartOf="@+id/otp1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

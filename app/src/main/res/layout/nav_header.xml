@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@color/colorPrimaryDark">
+
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="130dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/profile_"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abril_fatface"
+        android:textColor="#fff"
+        android:id="@+id/vendorname"
+        android:textSize="20dp"
+        android:text="Name : Hemant" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abril_fatface"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        android:id="@+id/vendorphone"
+        android:text="Phone : 8708786527" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abril_fatface"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/vendorIdentity"
+        android:text="Id : 83y4hl23i" />
+
+</LinearLayout>

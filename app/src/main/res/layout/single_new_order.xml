@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:padding="15dp"
+    android:layout_marginVertical="5dp"
+    android:background="#9E9B9B"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:fontFamily="@font/baloo_chettan"
+        android:id="@+id/order_id"
+        android:text="Order Id : Dej9898328r "
+        android:textColor="#020000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/orderTotal"
+        android:fontFamily="@font/baloo_chettan"
+        android:text="Total : 400"
+        android:textColor="#000000" />
+
+</LinearLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="30dp"
+    android:layout_height="wrap_content"
+    android:background="#B9BDB9"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:id="@+id/dialogll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/amaranth"
+        android:text="Enter OTP"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <com.mukesh.OtpView
+        android:id="@+id/otp_view"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:inputType="number"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/dialogll1"
+        app:itemCount="6"
+        style="@style/AppTheme"
+        app:lineColor="#000"
+        app:viewType="line"
+        />
+
+    <Button
+        android:layout_below="@+id/otp_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/otpget"
+        android:text="Check OTP"
+        android:layout_marginHorizontal="40dp"
+        android:fontFamily="@font/amaranth"
+        android:textStyle="bold"
+        android:theme="@style/PrimaryButton"/>
+
+</RelativeLayout>
