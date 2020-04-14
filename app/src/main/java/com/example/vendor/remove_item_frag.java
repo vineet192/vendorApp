@@ -31,7 +31,7 @@ public class remove_item_frag extends Fragment {
 
     ArrayList<String> productnamelist = new ArrayList<>();
     ArrayList<String> productpricelist = new ArrayList<>();
-    private List<order_dataholder> list = new ArrayList<>();
+    private List<neworders_model> list = new ArrayList<>();
 
     public JSONArray array, arr;
     public JSONObject obj, object;
@@ -51,7 +51,7 @@ public class remove_item_frag extends Fragment {
 
     TextView date,time,totalPrice;
 
-    String temp;
+    String temp,temp2;
 
 
 
@@ -82,21 +82,24 @@ public class remove_item_frag extends Fragment {
 
 
         temp="removed_items"+orderid_;
+        temp2 = "new_orders" + orderid_;
+
 
         if(sharedPref.contains(temp))
         {
 
             String jsonGet = sharedPref.getString(temp, null);
             try {
-                array = new JSONArray(jsonGet);
+                object = new JSONObject(jsonGet);
+                array=object.getJSONArray("name");
+                arr=object.getJSONArray("quan");
                 for (int i = 0; i < array.length(); i++) {
-                    JSONObject object1 = array.getJSONObject(i);
-                    productnamelist.add((String) object1.get("product_name"));
-                    productpricelist.add((String.valueOf(object1.get("product_price"))));
+                    productnamelist.add(array.getString(i));
+                    productpricelist.add(arr.getString(i));
                 }
 
                 for (int i = 0; i < array.length(); i++) {
-                    order_dataholder List = new order_dataholder(productnamelist.get(i), productpricelist.get(i));
+                    neworders_model List = new neworders_model(productnamelist.get(i), productpricelist.get(i));
                     list.add(List);
                 }
                 adapter = new remove_item_adapter(list, getActivity());

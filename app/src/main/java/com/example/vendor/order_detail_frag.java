@@ -49,10 +49,10 @@ public class order_detail_frag extends Fragment {
     RecyclerView.Adapter adapter = null;
 
     ArrayList<String> productnamelist = new ArrayList<>();
-    ArrayList<String> productpricelist = new ArrayList<>();
-    private List<order_dataholder> list = new ArrayList<>();
+    ArrayList<String> productquanlist = new ArrayList<>();
+    private List<neworders_model> list = new ArrayList<>();
 
-    public JSONArray array, arr;
+    public static JSONArray array, arr, namearr, quanarr;
     public JSONObject obj, object;
 
     public static String json;
@@ -67,7 +67,7 @@ public class order_detail_frag extends Fragment {
 
     static String order_Detail;
     String url_recieve = "https://gocoding.azurewebsites.net/vendor/send_order_items/";
-    String url_sent="https://gocoding.azurewebsites.net/vendorresponse/";
+    String url_sent = "https://gocoding.azurewebsites.net/vendorresponse/";
 
     Gson gson = new Gson();
 
@@ -117,22 +117,14 @@ public class order_detail_frag extends Fragment {
 
         temp2 = "new_orders" + orderid_;
 
-        if (sharedPref.contains(temp2)) {
-            order_Detail = sharedPref.getString(temp2, null);
-            Log.d("stored", order_Detail);
-            loadrecycler();
-            dialog.dismiss();
-            Toast.makeText(getContext(), "stored", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getContext(), "not stored", Toast.LENGTH_LONG).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadData();
-                    dialog.dismiss();
-                }
-            }, 200);
-        }
+        Toast.makeText(getContext(), "not stored", Toast.LENGTH_LONG).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadrecycler();
+                dialog.dismiss();
+            }
+        }, 200);
 
 
         accept_btn.setOnClickListener(new View.OnClickListener() {
@@ -155,14 +147,10 @@ public class order_detail_frag extends Fragment {
                 op.put("vendor_phone", new_order_frag.ve);
                 op.put("order_Id", new_order_frag.o);
                 try {
-                    JSONObject o1 = new JSONObject(order_Detail);
-                    JSONArray a1 = o1.getJSONArray("items");
-                    List<String> list = new ArrayList<>();
-                    for (int i = 0; i < a1.length(); i++) {
-                        JSONObject o5 = a1.getJSONObject(i);
-                        list.add(o5.getString("product_name"));
-                    }
-                    op.put("items", String.valueOf(list));
+                    String str = sharedPref.getString(temp2, null);
+                    JSONObject object1 = new JSONObject(str);
+                    JSONArray arr5 = object1.getJSONArray("name");
+                    op.put("items", String.valueOf(arr5));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -212,19 +200,18 @@ public class order_detail_frag extends Fragment {
                 }
 
                 try {
-                    JSONObject o9= new JSONObject(response);
-                    String check=o9.getString("success");
-                    if(check.equals("Accepted")){
+                    JSONObject o9 = new JSONObject(response);
+                    String check = o9.getString("success");
+                    if (check.equals("Accepted")) {
                         Intent i = new Intent(getContext(), MainActivity_.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
-                    }
-                    else{
-                        Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
 
@@ -296,19 +283,18 @@ public class order_detail_frag extends Fragment {
                 }
 
                 try {
-                    JSONObject o9= new JSONObject(response);
-                    String check=o9.getString("success");
-                    if(check.equals("Rejected")){
+                    JSONObject o9 = new JSONObject(response);
+                    String check = o9.getString("success");
+                    if (check.equals("Rejected")) {
                         Intent i = new Intent(getContext(), MainActivity_.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
-                    }
-                    else{
-                        Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }
@@ -382,30 +368,49 @@ public class order_detail_frag extends Fragment {
 
     public void loadrecycler() {
         try {
-            String jsonGet = sharedPref.getString(temp2, null);
+            String jsonGet = sharedPref.getString("put the name", null);
             JSONObject ob = new JSONObject(jsonGet);
 
-            date.setText(ob.getString("order_date"));
-            time.setText(ob.getString("order_time"));
-            deliverycharge.setText(("delivery_charge"));
-            tax.setText(("tax"));
-            totalcost.setText(("total_price"));
+            JSONArray array = ob.getJSONArray("neworder");
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                if (orderid_.equals(object.getString("order_id"))) ;
+                {
+                    date.setText(object.getString("date"));
+                    time.setText(object.getString("time"));
+                    deliverycharge.setText(("delivery_charge"));
+                    tax.setText(("tax"));
+                    totalcost.setText(("total_price"));
 
-            date_order=date.getText().toString();
-            time_order=time.getText().toString();
-            totalprice_order=totalcost.getText().toString();
+                    namearr = object.getJSONArray("total_order");
+                    quanarr = object.getJSONArray("quan");
 
-            Toast.makeText(getContext(), ob.getString("order_time"), Toast.LENGTH_LONG).show();
+                    JSONObject object2 = new JSONObject();
+                    object2.put("name", namearr);
+                    object2.put("quan", quanarr);
 
+                    edit = sharedPref.edit();
+                    edit.putString(temp2, String.valueOf(object2));
+                    edit.commit();
 
-            arr = ob.getJSONArray("items");
-            for (int j = 0; j < arr.length(); j++) {
-                JSONObject object1 = arr.getJSONObject(j);
-                productnamelist.add((String) object1.get("product_name"));
-                productpricelist.add((String.valueOf(object1.get("product_price"))));
+                    String str = sharedPref.getString(temp2, null);
+                    JSONObject object1 = new JSONObject(str);
+                    arr = object1.getJSONArray("name");
+                    for (int j = 0; j < arr.length(); j++) {
+                        productnamelist.add(arr.getString(j));
+                    }
+                    arr = object1.getJSONArray("quan");
+                    for (int j = 0; j < arr.length(); j++) {
+                        productquanlist.add(arr.getString(j));
+                    }
+                }
             }
+            date_order = date.getText().toString();
+            time_order = time.getText().toString();
+            totalprice_order = totalcost.getText().toString();
+
             for (int i = 0; i < arr.length(); i++) {
-                order_dataholder List = new order_dataholder(productnamelist.get(i), productpricelist.get(i));
+                neworders_model List = new neworders_model(productnamelist.get(i), productquanlist.get(i));
                 list.add(List);
             }
             adapter = new orderdetail_adapter(list, getActivity());

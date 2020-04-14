@@ -33,9 +33,7 @@ public class Order_detail extends AppCompatActivity {
 
 
         Intent intent=getIntent();
-//        orderId_=intent.getStringExtra("OrderId");
-        orderId_= new_order_frag.o;
-        tempdata_=intent.getStringExtra("data");
+        orderId_=intent.getStringExtra("OrderId");
 
 
         orderid.setText(orderId_);
