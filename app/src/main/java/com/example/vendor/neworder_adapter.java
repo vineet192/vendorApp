@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.Models.order_dataholder;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class neworder_adapter extends RecyclerView.Adapter<neworder_adapter.new_order_ViewHolder> {
 
-    List<order_dataholder> neworder_dataholderList;
+    ArrayList<order_dataholder> neworder_dataholderList;
     Context context;
 
     public SharedPreferences sharedPref;
@@ -32,7 +34,7 @@ public class neworder_adapter extends RecyclerView.Adapter<neworder_adapter.new_
 
     String url_sent, response;
 
-    public neworder_adapter(List<order_dataholder> order_dataholderList, Context context) {
+    public neworder_adapter(ArrayList<order_dataholder> order_dataholderList, Context context) {
         this.neworder_dataholderList = order_dataholderList;
         this.context = context;
     }
@@ -56,7 +58,7 @@ public class neworder_adapter extends RecyclerView.Adapter<neworder_adapter.new_
         holder.date.setText(listItem.getDate());
         holder.orderID.setText(listItem.getOrderID());
 //        holder.timer.setText(listItem.getTimer());
-        holder.total_price.setText(listItem.getTotal_price());
+//        holder.total_price.setText(listItem.getTotal_price());
 
         int total_millis=180000;
 

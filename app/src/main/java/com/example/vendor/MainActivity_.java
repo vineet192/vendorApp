@@ -55,11 +55,6 @@ public class MainActivity_ extends AppCompatActivity
                 getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
 
 
-        Intent i=getIntent();
-        if(i!=null)
-        check=i.getStringExtra("check");
-
-
 //        fullpagefragcontainer= findViewById(R.id.fullpagefragcontainer);
 //
 //

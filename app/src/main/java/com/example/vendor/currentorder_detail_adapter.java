@@ -11,6 +11,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.Models.order_dataholder;
+
 public class currentorder_detail_adapter extends RecyclerView.Adapter<currentorder_detail_adapter.currentorderdetail_ViewHolder> {
 
 

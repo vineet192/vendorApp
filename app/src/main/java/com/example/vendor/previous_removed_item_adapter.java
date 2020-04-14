@@ -11,6 +11,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.Models.order_dataholder;
+
 public class previous_removed_item_adapter  extends RecyclerView.Adapter<previous_removed_item_adapter.previousorderremoved_ViewHolder> {
 
 

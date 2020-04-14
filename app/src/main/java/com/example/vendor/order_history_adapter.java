@@ -13,6 +13,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.Models.order_dataholder;
+
 public class order_history_adapter extends RecyclerView.Adapter<order_history_adapter.history_order_ViewHolder> {
 
 

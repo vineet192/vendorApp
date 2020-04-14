@@ -1,4 +1,8 @@
-package com.example.vendor;
+package com.example.Models;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 
 public class order_dataholder {
 
@@ -6,6 +10,9 @@ public class order_dataholder {
 
     String orderID,date,time,total_price,timer,deliveryboy_arivingtime,
             deliveryboy_phone,deliveryboy_otp,product_name,product_price,prod_quantity,prod_total_price,package_status;
+
+    JSONArray QuantityArray;
+    JSONArray TotalOrderArray;
 
     public order_dataholder(String product_name, String prod_quantity, String prod_total_price) {
         this.product_name = product_name;
@@ -20,7 +27,23 @@ public class order_dataholder {
         this.total_price = total_price;
     }
 
-    public order_dataholder(String orderID, String date, String time, String total_price,String package_status) {
+    public JSONArray getQuantityArray() {
+        return QuantityArray;
+    }
+
+    public void setQuantityArray(JSONArray quantityArray) {
+        QuantityArray = quantityArray;
+    }
+
+    public JSONArray getTotalOrderArray() {
+        return TotalOrderArray;
+    }
+
+    public void setTotalOrderArray(JSONArray totalOrderArray) {
+        TotalOrderArray = totalOrderArray;
+    }
+
+    public order_dataholder(String orderID, String date, String time, String total_price, String package_status) {
         this.orderID = orderID;
         this.date = date;
         this.time = time;

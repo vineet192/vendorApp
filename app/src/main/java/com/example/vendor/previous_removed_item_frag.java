@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.Models.order_dataholder;
+
 public class previous_removed_item_frag extends Fragment {
 
     TextView date,time,totalcost;

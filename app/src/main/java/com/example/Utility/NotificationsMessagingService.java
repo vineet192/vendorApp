@@ -3,7 +3,6 @@ package com.example.Utility;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -15,19 +14,21 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.vendor.MainActivity;
 import com.example.vendor.MainActivity_;
 import com.example.vendor.R;
-import com.example.vendor.order_dataholder;
+import com.example.Models.order_dataholder;
 import com.example.vendor.subscription_dataholder;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.pusher.pushnotifications.fcm.MessagingService;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "notification_liveTask";
     private static final String CHANNEL_NAME = "CURRENT OFFERS";
     private static final String CHANNEL_DESCRIPTION = "Notifications for new offer";
+    ArrayList<order_dataholder> listOrders;
+    ArrayList<subscription_dataholder> listSubscription;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -74,8 +77,8 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
 
         if(!String.valueOf(new_order).equals("null")){
             try {
-                Log.d(TAG + "  newOrder","orderId : "+new_order.get("orderId")+ " * date : "
-                        +new_order.get("date")+" * time : "+new_order.get("time")+" * total_orders : "+new_order.get("total_orders")
+                Log.d(TAG + "  newOrder","order_id : "+new_order.get("order_id")+ " * date : "
+                        +new_order.get("date")+" * time : "+new_order.get("time")+" * total_orders : "+new_order.get("total_order")
                 +" * quantity : "+new_order.get("quantity"));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -87,7 +90,7 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
 
             order_dataholder order_dataholder = new order_dataholder();
             try {
-                order_dataholder.setOrderID("" + new_order.get("orderId"));
+                order_dataholder.setOrderID("" + new_order.get("order_id"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -104,7 +107,21 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 e.printStackTrace();
             }
 
-            saveNewOrderData(order_dataholder);
+            try {
+                order_dataholder.setQuantityArray(new JSONArray(jsnobject.getString("quantity")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                order_dataholder.setTotalOrderArray( new JSONArray(jsnobject.getString("total_order")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            loadNewOrderData();
+            listOrders.add(order_dataholder);
+            saveNewOrderData(listOrders);
             Intent intent=new Intent(this,MainActivity_.class);
             intent.putExtra("check","trueorder");
             startActivity(intent);
@@ -225,14 +242,14 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
         Log.d(TAG,"sendNotification = run");
     }
 
-    public void saveNewOrderData(order_dataholder order) {
+    public void saveNewOrderData(ArrayList<order_dataholder> list) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for newOrder", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(order);
-        editor.putString("order", json);
+        String json = gson.toJson(list);
+        editor.putString("list", json);
         editor.apply();
-        Log.d(TAG,""+order.toString());
+        Log.d(TAG,""+list.toString());
     }
 
     public void saveNewSubscriptionData(subscription_dataholder order) {
@@ -253,5 +270,17 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
         editor.putString("url", url);
         editor.apply();
         Log.d(TAG,name +"*"+phoneNo+"*"+url);
+    }
+
+    public void  loadNewOrderData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for newOrder", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<ArrayList<order_dataholder>>() {}.getType();
+        listOrders = gson.fromJson(json, type);
+
+        if (listOrders == null) {
+            listOrders = new ArrayList<>();
+        }
     }
 }
