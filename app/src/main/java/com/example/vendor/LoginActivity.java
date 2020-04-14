@@ -169,11 +169,13 @@ public class LoginActivity extends AppCompatActivity
 
                         vendorDetails = response.body();
 
+                        String ph="+917578968856";
+
                         //Replace this phone number with response.body().getVendor_phone() or a valid phone number.
 
                         //Verifying phone number with firebase and sending sms code.
                         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                                vendorDetails.getVendor_phone(),        // Phone number to verify
+                                ph,        // Phone number to verify
                                 60,                 // Timeout duration
                                 TimeUnit.SECONDS,   // Unit of timeout
                                 LoginActivity.this,               // Activity (for callback binding)

@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapter.orderdetail_ViewHolder> {
 
 
-    List<order_dataholder> orderdetail_dataholderList;
+    List<neworders_model> orderdetail_dataholderList;
     Context context;
 
     JSONArray array, arr;
@@ -40,9 +40,12 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
     SharedPreferences.Editor edit;
     String orderid_;
 
-    JSONArray a = new JSONArray();
+    String temp,temp2;
+    JSONArray namearr=new JSONArray();
+    JSONArray quanarr=new JSONArray();
 
-    String temp;
+    JSONArray a=new JSONArray();
+    JSONArray a2=new JSONArray();
 
 
     static String removedjson;
@@ -50,7 +53,7 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
     static List<JSONObject> sharedList = new ArrayList<>();
 
 
-    public orderdetail_adapter(List<order_dataholder> order_dataholderList, Context context) {
+    public orderdetail_adapter(List<neworders_model> order_dataholderList, Context context) {
         this.orderdetail_dataholderList = order_dataholderList;
         this.context = context;
     }
@@ -64,41 +67,20 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
         orderid_ = Order_detail.orderId_;
 
         temp = "removed_items" + orderid_;
+        temp2="new_orders" + orderid_;
 
 
         if ((sharedPref.contains(temp))) {
 
             removedjson = sharedPref.getString(temp, null);
             try {
-                a = new JSONArray(removedjson);
+                JSONObject object3=new JSONObject(removedjson);
+                namearr=object3.getJSONArray("name");
+                quanarr=object3.getJSONArray("quan");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("on accept", String.valueOf(a));
         }
-
-//                JSONArray array = new JSONArray(jsonGet);
-//
-//
-//                for (int i = 0; i < array.length(); i++) {
-//                    JSONObject obj = array.getJSONObject(i);
-//
-//                    HashMap<String, Object> t = new HashMap<>();
-//                    t.put("category_name",  obj.get("category_name"));
-//                    t.put("prod_name",  obj.get("prod_name"));
-//                    t.put("prod_id",  obj.get("prod_id"));
-//                    t.put("prod_price",  obj.get("prod_price"));
-//                    t.put("prod_rating",  obj.get("prod_rating"));
-//                    t.put("prod_desc",  obj.get("prod_desc"));
-//                    t.put("prod_img",  obj.get("prod_img"));
-//                    t.put("quantity",  obj.get("quantity"));
-//                    t.put("check",  obj.get("check"));
-//
-//                    sharedList.add(obj);
-//
-//
-//                    Log.d("list", String.valueOf(sharedList));
-
 
         return new orderdetail_ViewHolder(v);
 
@@ -107,10 +89,10 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
     @Override
     public void onBindViewHolder(@NonNull final orderdetail_ViewHolder holder, int position) {
 
-        final order_dataholder listItem = orderdetail_dataholderList.get(position);
+        final neworders_model listItem = orderdetail_dataholderList.get(position);
 
-        holder.product_name.setText(listItem.getProduct_name());
-        holder.product_price.setText(listItem.getProduct_price());
+        holder.product_name.setText(listItem.getProd_name());
+        holder.product_quan.setText(listItem.getProd_quan());
 
 
         holder.remove_tv.setOnClickListener(new View.OnClickListener() {
@@ -128,39 +110,46 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
 
 
                                 try {
-                                    String jsonGet = order_detail_frag.order_Detail;
+                                    String jsonGet=sharedPref.getString(temp2,null);
                                     obj = new JSONObject(jsonGet);
 
                                     JSONArray a1 = new JSONArray();
+                                    JSONArray quanarr1=new JSONArray();
+                                    JSONArray namearr1=new JSONArray();
 
-                                    arr = obj.getJSONArray("items");
-                                    Log.d("without removing", String.valueOf(arr));
+                                    arr = obj.getJSONArray("name");
+                                    a1=obj.getJSONArray("quan");
+                                    JSONObject jsonObject1=new JSONObject();
 
                                     for (int j = 0; j < arr.length(); j++) {
-                                        JSONObject object1 = arr.getJSONObject(j);
-                                        if (object1.get("product_name").equals(holder.product_name.getText())) {
+                                        if (arr.getString(j).equals(holder.product_name.getText())) {
 
-                                            a.put(object1);
+                                            namearr.put(arr.getString(j));
+
+                                            quanarr.put(a1.getString(j));
+
+                                            JSONObject jsonObject=new JSONObject();
+                                            jsonObject.put("name",namearr);
+                                            jsonObject.put("quan",quanarr);
 
                                             edit = sharedPref.edit();
-                                            edit.putString(temp, String.valueOf(a));
+                                            edit.putString(temp, String.valueOf(jsonObject));
                                             edit.commit();
 
-                                            Log.d("checkme", String.valueOf(a));
                                         } else {
+                                            namearr1.put(arr.getString(j));
 
-                                            a1.put(object1);
+                                            quanarr1.put(a1.getString(j));
 
                                         }
 
                                     }
-                                    obj.put("items", a1);
-                                    Log.d("123", String.valueOf(object));
-
-                                    String temp2 = "new_orders" + orderid_;
+                                    jsonObject1.put("name",namearr1);
+                                    jsonObject1.put("quan",quanarr1);
+                                    a2.put(jsonObject1);
                                     edit = sharedPref.edit();
-                                    edit.putString(temp2, String.valueOf(obj));
-                                    edit.commit();
+                                    edit.putString(temp2, String.valueOf(jsonObject1));
+                                    edit.apply();
 
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
@@ -184,13 +173,13 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
 
     public class orderdetail_ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView product_name, product_price, remove_tv;
+        TextView product_name, product_quan, remove_tv;
 
         public orderdetail_ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             product_name = itemView.findViewById(R.id.product_name);
-            product_price = itemView.findViewById(R.id.product_price);
+            product_quan = itemView.findViewById(R.id.product_quan);
             remove_tv = itemView.findViewById(R.id.remove_tv);
 
 

@@ -26,11 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapter.removeitem_ViewHolder> {
 
 
-    List<order_dataholder> Orderdetail_dataholderList;
+    List<neworders_model> Orderdetail_dataholderList;
     Context context;
-
-    JSONObject obj, object;
-
 
 
     public HashMap<String, String> removedItem = new HashMap<>();
@@ -41,10 +38,17 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
     SharedPreferences.Editor edit;
     String orderid_;
 
-    String removedJson, removedJson1,temp,temp2;
+    String removedjson, removedJson1,temp,temp2;
+
+    JSONArray namearr=new JSONArray();
+    JSONArray quanarr=new JSONArray();
+    JSONArray namearr1=new JSONArray();
+    JSONArray quanarr1=new JSONArray();
+    JSONArray namearr2=new JSONArray();
+    JSONArray quanarr2=new JSONArray();
 
 
-    public remove_item_adapter(List<order_dataholder> order_dataholderList, Context context) {
+    public remove_item_adapter(List<neworders_model> order_dataholderList, Context context) {
         this.Orderdetail_dataholderList = order_dataholderList;
         this.context = context;
     }
@@ -56,9 +60,32 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.remove_item_layout, parent, false);
         sharedPref = context.getSharedPreferences("myPref", Context.MODE_PRIVATE);
         orderid_ = Order_detail.orderId_;
-        removedJson = remove_item_frag.removedJson;
         temp= "removed_items"+orderid_;
         temp2="new_orders"+orderid_;
+
+        if ((sharedPref.contains(temp))) {
+
+            removedjson = sharedPref.getString(temp, null);
+            try {
+                JSONObject object3=new JSONObject(removedjson);
+                namearr=object3.getJSONArray("name");
+                quanarr=object3.getJSONArray("quan");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if ((sharedPref.contains(temp2))) {
+
+            removedjson = sharedPref.getString(temp, null);
+            try {
+                JSONObject object3=new JSONObject(removedjson);
+                namearr1=object3.getJSONArray("name");
+                quanarr1=object3.getJSONArray("quan");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         return new remove_item_adapter.removeitem_ViewHolder(v);
@@ -68,10 +95,10 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
     @Override
     public void onBindViewHolder(@NonNull final remove_item_adapter.removeitem_ViewHolder holder, int position) {
 
-        final order_dataholder listItem = Orderdetail_dataholderList.get(position);
+        final neworders_model listItem = Orderdetail_dataholderList.get(position);
 
-        holder.product_name.setText(listItem.getProduct_name());
-        holder.product_price.setText(listItem.getProduct_price());
+        holder.product_name.setText(listItem.getProd_name());
+        holder.product_quan.setText(listItem.getProd_quan());
 
 
         holder.restore_tv.setOnClickListener(new View.OnClickListener() {
@@ -92,129 +119,35 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
                                 JSONArray array = new JSONArray();
 
 
-                                if ((sharedPref.contains(temp))) {
-
-                                    removedJson = sharedPref.getString(temp, null);
-                                    try {
-                                        array = new JSONArray(removedJson);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    Log.d("on accept", String.valueOf(removedJson));
-                                }
-
-                                removedJson1 = sharedPref.getString(temp2, null);
                                 try {
-                                    JSONObject o3=new JSONObject(removedJson1);
-                                    a4=o3.getJSONArray("items");
+                                    for (int i = 0; i < namearr.length(); i++) {
+                                        if (namearr.getString(i).equals(holder.product_name.getText())) {
+                                            namearr1.put(namearr.getString(i));
+                                            quanarr1.put(quanarr.getString(i));
+                                            JSONObject object=new JSONObject();
+                                            object.put("name",namearr1);
+                                            object.put("quan",quanarr1);
+                                            edit = sharedPref.edit();
+                                            edit.putString(temp2, String.valueOf(object));
+                                            edit.commit();
 
-//                                    for (int i = 0; i < a3.length(); i++) {
-//                                        object = a3.getJSONObject(i);
-//                                        if (object.getString("order_id").equals(orderid_)) {
-//                                            a4 = object.getJSONArray("items");
-//                                        }
-//
-//                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                                try {
-                                    for (int i = 0; i < array.length(); i++) {
-                                        JSONObject object1 = array.getJSONObject(i);
-                                        if (object1.get("product_name").equals(holder.product_name.getText())) {
-                                            a4.put(object1);
-//                                            for(int j=0;j<array1.length();j++)
-//                                            {
-//                                                JSONObject ob=array1.getJSONObject(j);
-//                                                if(ob.get("order_id").equals(orderid_))
-//                                                {
-//                                                    JSONArray a=ob.getJSONArray("items");
-//                                                    a.put(object1);
-//                                                    ob.getJSONArray("items").put(object1);
-////                                                    for(int k=0;k<a.length();k++)
-////                                                    {
-////                                                        JSONObject o=a.getJSONObject(k);
-////                                                        if(o.get("prod_name").equals(holder.product_name.getText()))
-////                                                        {
-////                                                            a.put(o);
-////                                                        }
-////                                                    }
-//                                                }
-//                                            }
-
-                                        } else
-                                            a5.put(object1);
+                                        } else {
+                                            namearr2.put(namearr.getString(i));
+                                            quanarr2.put(quanarr.getString(i));
+                                        }
                                     }
 
-//                                    Log.d("a4", String.valueOf(a4));
-//                                    Log.d("a5", String.valueOf(a5));
-
-//                                    for (int i = 0; i < a3.length(); i++) {
-//                                        object = a3.getJSONObject(i);
-//                                        if (object.getString("order_id").equals(orderid_)) {
-//                                            object.remove("items");
-//                                            object.put("items", a4);
-//                                        }
-//
-//                                    }
-
-                                    object = new JSONObject(removedJson1);
-                                    object.remove("items");
-                                    object.put("items", a4);
-
-
-
-                                    Log.d("checkobj", String.valueOf(object));
-                                    Log.d("a5check", String.valueOf(a5));
-
-                                    String temp5="new_orders"+orderid_;
-                                    edit = sharedPref.edit();
-                                    edit.putString(temp5, String.valueOf(object));
-                                    edit.commit();
-
+                                    JSONObject jsonObject=new JSONObject();
+                                    jsonObject.put("name",namearr2);
+                                    jsonObject.put("quan",quanarr2);
                                     edit = sharedPref.edit();
                                     edit.remove(temp);
-                                    edit.putString(temp, String.valueOf(a5));
+                                    edit.putString(temp, String.valueOf(jsonObject));
                                     edit.apply();
-
-//                                    edit = sharedPref.edit();
-//                                    edit.putString("new_order", String.valueOf(a3));
-//                                    edit.apply();
-
-//                                    Log.d("orderstr", sharedPref.getString("new_order", null));
-//                                    Log.d("removedstr", sharedPref.getString("removed_items", null));
 
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
                                 }
-
-//                                try {
-//                                    String jsonGet = sharedPref.getString("new_order", null);
-//                                    array = new JSONArray(jsonGet);
-//                                    for(int i=0;i<array.length();i++)
-//                                    {
-//                                        JSONObject ob= array.getJSONObject(i);
-//                                        if(ob.getString("order_id").equals(orderid_))
-//                                        {
-//                                            arr=ob.getJSONArray("items");
-//                                            for(int j=0;j<arr.length();j++)
-//                                            {
-//                                                JSONObject object1= arr.getJSONObject(j);
-//                                                sharedList_.add(object1);
-//                                            }
-//                                            array.getJSONObject(i).remove("items");
-//                                            array.getJSONObject(i).put("items",sharedList_);
-//                                        }
-//                                    }
-//                                    edit = sharedPref.edit();
-//                                    edit.putString("new_order", String.valueOf(array));
-//                                    edit.apply();
-//                                } catch (JSONException ex) {
-//                                    ex.printStackTrace();
-//                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -232,13 +165,13 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
 
     public class removeitem_ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView product_name, product_price, restore_tv;
+        TextView product_name, product_quan, restore_tv;
 
         public removeitem_ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             product_name = itemView.findViewById(R.id.product_name);
-            product_price = itemView.findViewById(R.id.product_price);
+            product_quan = itemView.findViewById(R.id.product_quan);
             restore_tv = itemView.findViewById(R.id.restore_tv);
 
 

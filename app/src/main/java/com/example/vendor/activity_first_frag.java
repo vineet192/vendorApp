@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,27 +141,27 @@ public class activity_first_frag extends Fragment
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(
                 getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
 
-        if (sharedPreferences.getString(getString(R.string.vendor_active_status_key), "inactive").equals("active"))
-        {
-            switch_txt.setText("Online");
-            switch_txt.setTextColor(Color.GREEN);
-            fragmentcontainer.setVisibility(View.VISIBLE);
-            offline_layout.setVisibility(View.INVISIBLE);
-            switch_btn.setOnClickListener(null);
-            switch_btn.setChecked(true);
-            setfrag(section, sub_section);
-        } else
-        {
-            switch_txt.setText("Offline");
-            switch_txt.setTextColor(Color.RED);
-            fragmentcontainer.setVisibility(View.INVISIBLE);
-            offline_layout.setVisibility(View.VISIBLE);
-            switch_btn.setOnClickListener(null);
-            switch_btn.setChecked(false);
-            Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentcontainer);
-//            getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
-
-        }
+//        if (sharedPreferences.getString(getString(R.string.vendor_active_status_key), "inactive").equals("active"))
+//        {
+//            switch_txt.setText("Online");
+//            switch_txt.setTextColor(Color.GREEN);
+//            fragmentcontainer.setVisibility(View.VISIBLE);
+//            offline_layout.setVisibility(View.INVISIBLE);
+//            switch_btn.setOnClickListener(null);
+//            switch_btn.setChecked(true);
+//            setfrag(section, sub_section);
+//        } else
+//        {
+//            switch_txt.setText("Offline");
+//            switch_txt.setTextColor(Color.RED);
+//            fragmentcontainer.setVisibility(View.INVISIBLE);
+//            offline_layout.setVisibility(View.VISIBLE);
+//            switch_btn.setOnClickListener(null);
+//            switch_btn.setChecked(false);
+//            Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentcontainer);
+////            getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
+//
+//        }
 
         switch_btn.setOnClickListener(new View.OnClickListener()
         {
@@ -169,64 +170,67 @@ public class activity_first_frag extends Fragment
             {
                 if (switch_btn.isChecked())
                 {
-                    dialog = new ProgressDialog(getContext()); // this = YourActivity
-                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    dialog.setTitle("Loading");
-                    dialog.setMessage("Loading. Please wait...");
-                    dialog.setIndeterminate(true);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
+//                    dialog = new ProgressDialog(getContext()); // this = YourActivity
+//                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                    dialog.setTitle("Loading");
+//                    dialog.setMessage("Loading. Please wait...");
+//                    dialog.setIndeterminate(true);
+//                    dialog.setCanceledOnTouchOutside(false);
+//                    dialog.show();
 
                     switch_txt.setText("Online");
                     switch_txt.setTextColor(Color.GREEN);
                     fragmentcontainer.setVisibility(View.VISIBLE);
                     offline_layout.setVisibility(View.INVISIBLE);
+                    setfrag(section, sub_section);
 
-                    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                            getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    String phone = sharedPreferences.getString(getString(R.string.vendor_phone_key), "3");
 
-                    JsonObject requestObj = new JsonObject();
-                    requestObj.addProperty("vendor_phone", phone);
-                    requestObj.addProperty("status", "active");
+//                    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+//                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+//                            getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    String phone = sharedPreferences.getString(getString(R.string.vendor_phone_key), "3");
+//
+//                    JsonObject requestObj = new JsonObject();
+//                    requestObj.addProperty("vendor_phone", phone);
+//                    requestObj.addProperty("status", "active");
+//
+//                    Call<StatusResponse> activationCall = apiInterface.setVendorStatus(requestObj);
 
-                    Call<StatusResponse> activationCall = apiInterface.setVendorStatus(requestObj);
-
-                    activationCall.enqueue(new Callback<StatusResponse>()
-                    {
-                        @Override
-                        public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response)
-                        {
-                            if (response.body().getSuccess().equals("true"))
-                            {
-                                setfrag(section, sub_section);
-                                editor.putString(getString(R.string.vendor_active_status_key), "active");
-                                editor.commit();
-                                dialog.dismiss();
-                            } else
-                            {
-                                switch_txt.setText("Offline");
-                                switch_btn.setChecked(false);
-                                switch_btn.setOnCheckedChangeListener(null);
-                                switch_txt.setTextColor(Color.RED);
-                                fragmentcontainer.setVisibility(View.INVISIBLE);
-                                offline_layout.setVisibility(View.VISIBLE);
-                                Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentcontainer);
-                                if(f!=null)
-                                    getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
-                                dialog.dismiss();
-                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<StatusResponse> call, Throwable t)
-                        {
-
-                        }
-                    });
+//                    activationCall.enqueue(new Callback<StatusResponse>()
+//                    {
+//                        @Override
+//                        public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response)
+//                        {
+//                            Log.d("letscheck", String.valueOf(response.body()));
+//                            if (response.body().getSuccess().equals("true"))
+//                            {
+//                                setfrag(section, sub_section);
+//                                editor.putString(getString(R.string.vendor_active_status_key), "active");
+//                                editor.commit();
+//                                dialog.dismiss();
+//                            } else
+//                            {
+//                                switch_txt.setText("Offline");
+//                                switch_btn.setChecked(false);
+//                                switch_btn.setOnCheckedChangeListener(null);
+//                                switch_txt.setTextColor(Color.RED);
+//                                fragmentcontainer.setVisibility(View.INVISIBLE);
+//                                offline_layout.setVisibility(View.VISIBLE);
+//                                Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentcontainer);
+//                                if(f!=null)
+//                                    getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
+//                                dialog.dismiss();
+//                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<StatusResponse> call, Throwable t)
+//                        {
+//
+//                        }
+//                    });
 
                 } else
                 {
@@ -235,49 +239,49 @@ public class activity_first_frag extends Fragment
                     fragmentcontainer.setVisibility(View.INVISIBLE);
                     offline_layout.setVisibility(View.VISIBLE);
 
-                    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
-                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                            getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    String phone = sharedPreferences.getString(getString(R.string.vendor_phone_key), "3");
-
-                    JsonObject requestObj = new JsonObject();
-                    requestObj.addProperty("vendor_phone", phone);
-                    requestObj.addProperty("status", "inactive");
-
-                    Call<StatusResponse> activationCall = apiInterface.setVendorStatus(requestObj);
-
-                    activationCall.enqueue(new Callback<StatusResponse>()
-                    {
-                        @Override
-                        public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response)
-                        {
-                            if (response.body().getSuccess().equals("true"))
-                            {
-                                editor.putString(getString(R.string.vendor_active_status_key), "inactive");
-                                editor.commit();
-                                Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentcontainer);
-                                if(f!=null)
-                                    getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
-                                dialog.dismiss();
-                            } else
-                            {
-                                switch_txt.setText("Online");
-                                switch_txt.setTextColor(Color.GREEN);
-                                switch_btn.setChecked(true);
-                                fragmentcontainer.setVisibility(View.VISIBLE);
-                                offline_layout.setVisibility(View.INVISIBLE);
-                                dialog.dismiss();
-                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<StatusResponse> call, Throwable t)
-                        {
-
-                        }
-                    });
+//                    ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+//                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+//                            getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    String phone = sharedPreferences.getString(getString(R.string.vendor_phone_key), "3");
+//
+//                    JsonObject requestObj = new JsonObject();
+//                    requestObj.addProperty("vendor_phone", phone);
+//                    requestObj.addProperty("status", "inactive");
+//
+//                    Call<StatusResponse> activationCall = apiInterface.setVendorStatus(requestObj);
+//
+//                    activationCall.enqueue(new Callback<StatusResponse>()
+//                    {
+//                        @Override
+//                        public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response)
+//                        {
+//                            if (response.body().getSuccess().equals("true"))
+//                            {
+//                                editor.putString(getString(R.string.vendor_active_status_key), "inactive");
+//                                editor.commit();
+//                                Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentcontainer);
+//                                if(f!=null)
+//                                    getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
+//                                dialog.dismiss();
+//                            } else
+//                            {
+//                                switch_txt.setText("Online");
+//                                switch_txt.setTextColor(Color.GREEN);
+//                                switch_btn.setChecked(true);
+//                                fragmentcontainer.setVisibility(View.VISIBLE);
+//                                offline_layout.setVisibility(View.INVISIBLE);
+//                                dialog.dismiss();
+//                                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<StatusResponse> call, Throwable t)
+//                        {
+//
+//                        }
+//                    });
 
 
                 }
