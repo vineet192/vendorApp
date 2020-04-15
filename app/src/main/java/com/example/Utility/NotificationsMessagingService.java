@@ -38,21 +38,22 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_NAME = "CURRENT OFFERS";
     private static final String CHANNEL_DESCRIPTION = "Notifications for new offer";
     ArrayList<order_dataholder> listOrders;
-    ArrayList<subscription_dataholder> listSubscription;
+    JSONArray listSubscription;
+    JSONArray listDeliveryBoyDetails;
+    JSONArray listDeliveryBoyReached;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         String title;
         String message;
         Map<String,String> data = remoteMessage.getData();
-        Log.d("notify","remoteMessage.getData() : "+remoteMessage.getData());
+        Log.d(TAG,"remoteMessage.getData() : "+remoteMessage.getData());
 
-
-        Toast.makeText(this,"notify",Toast.LENGTH_LONG).show();
         JSONObject jsnobject = new JSONObject(data);
         JSONObject new_order = null;
         JSONObject new_subscription = null;
         JSONObject delivery_boy_details = null;
+        JSONObject delivery_boy_reached = null;
 
         try {
             new_order = new JSONObject(jsnobject.getString("new_order"));
@@ -72,8 +73,15 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
             e.printStackTrace();
         }
 
+        try {
+            delivery_boy_reached = new JSONObject(jsnobject.getString("delivery_boy_reached" ));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        Log.d(TAG,"newOrder = "+String.valueOf(new_order)+ " newSubs = "+String.valueOf(new_subscription)+ " delivery = "+String.valueOf(delivery_boy_details));
+
+        Log.d(TAG,"newOrder = "+String.valueOf(new_order)+ " newSubs = "+String.valueOf(new_subscription)+ " deliveryDetails = "+String.valueOf(delivery_boy_details)
+               + " deliveryBoyReached = "+String.valueOf(delivery_boy_reached));
 
         if(!String.valueOf(new_order).equals("null")){
             try {
@@ -83,10 +91,6 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            title = "New Order";
-            message = "There is a new Order  for you";
-            Log.d(TAG,"Title : "+title+" * Message : "+message);
-            sendNotification(title,message);
 
             order_dataholder order_dataholder = new order_dataholder();
             try {
@@ -119,90 +123,129 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 e.printStackTrace();
             }
 
+            message = "OrderID : "+order_dataholder.getOrderID();
+            title = "There is a new Order  for you";
+            Log.d(TAG,"Title : "+title+" * Message : "+message);
+            sendNotification(title,message);
+
             loadNewOrderData();
             listOrders.add(order_dataholder);
             saveNewOrderData(listOrders);
-            Intent intent=new Intent(this,MainActivity_.class);
-            intent.putExtra("check","trueorder");
-            startActivity(intent);
+            startActivity(new Intent(this,MainActivity_.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
 
-
         if(!String.valueOf(new_subscription).equals("null")){
+//            try {
+//                Log.d(TAG + "  newSubscription","orderId : "+new_subscription.get("orderId")+ " * date : "+" * subscriptionType : "+new_subscription.get("subscriptionType")
+//                        +new_subscription.get("date")+" * time : "+new_subscription.get("time")+" * price : "+new_subscription.get("price"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            title = "New Subscription";
+//            message = "There is a new Subscription  for you";
+//            Log.d(TAG,"Title : "+title+" * Message : "+message);
+//            sendNotification(title,message);
+//
+//            subscription_dataholder subscription_dataholder = new subscription_dataholder();
+//            try {
+//                subscription_dataholder.setOrderID("" + new_subscription.get("orderId"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                subscription_dataholder.setTimer("" + new_subscription.get("time"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                subscription_dataholder.setTotal_price("" + new_subscription.get("price"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                subscription_dataholder.setSubscription_type("" + new_subscription.get("subscriptionType"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+            String orderId=null;
             try {
-                Log.d(TAG + "  newSubscription","orderId : "+new_subscription.get("orderId")+ " * date : "+" * subscriptionType : "+new_subscription.get("subscriptionType")
-                        +new_subscription.get("date")+" * time : "+new_subscription.get("time")+" * price : "+new_subscription.get("price"));
+                orderId = ""+new_subscription.get("order_id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            title = "New Subscription";
-            message = "There is a new Subscription  for you";
+            message = "OrderId : "+orderId;
+            title = "There is a new Subscription  for you";
             Log.d(TAG,"Title : "+title+" * Message : "+message);
             sendNotification(title,message);
-
-            subscription_dataholder subscription_dataholder = new subscription_dataholder();
-            try {
-                subscription_dataholder.setOrderID("" + new_subscription.get("orderId"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                subscription_dataholder.setTimer("" + new_subscription.get("time"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                subscription_dataholder.setTotal_price("" + new_subscription.get("price"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                subscription_dataholder.setSubscription_type("" + new_subscription.get("subscriptionType"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            saveNewSubscriptionData(subscription_dataholder);
+            loadNewSubscriptionData();
+            listSubscription.put(new_subscription);
+            saveNewSubscriptionData(listSubscription);
         }
 
         if(!String.valueOf(delivery_boy_details).equals("null")){
+//            try {
+//                Log.d(TAG + "  deliveryBoyDetails","name : "+delivery_boy_details.get("name")+ " * phoneNo : "
+//                        +delivery_boy_details.get("phoneNo")+" * url : "+delivery_boy_details.get("url"));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            title = "Delivery boy has been selected";
+//            message = "Ready the order";
+//            Log.d(TAG,"Title : "+title+" * Message : "+message);
+//            sendNotification(title,message);
+//
+//            String name = null;
+//            String phoneNo = null;
+//            String url = null;
+//            try {
+//                name = ""+delivery_boy_details.get("name");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                phoneNo = ""+delivery_boy_details.get("phoneNo");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                url = ""+delivery_boy_details.get("url");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+            String orderId=null;
             try {
-                Log.d(TAG + "  deliveryBoyDetails","name : "+delivery_boy_details.get("name")+ " * phoneNo : "
-                        +delivery_boy_details.get("phoneNo")+" * url : "+delivery_boy_details.get("url"));
+                orderId = ""+delivery_boy_details.get("order_id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            title = "Delivery boy has been selected";
-            message = "Ready the order";
+            title = "Delivery boy has been assigned";
+            message = "For OrderID : "+orderId;
             Log.d(TAG,"Title : "+title+" * Message : "+message);
             sendNotification(title,message);
+            loadDeliveryBoyDetailsData();
+            listDeliveryBoyDetails.put(delivery_boy_details);
+            saveDeliveryBoyDetailsData(listDeliveryBoyDetails);
+        }
 
-            String name = null;
-            String phoneNo = null;
-            String url = null;
+        if(!String.valueOf(delivery_boy_reached).equals("null")){
+            String orderId=null;
             try {
-                name = ""+delivery_boy_details.get("name");
+                 orderId = ""+delivery_boy_reached.get("order_id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            try {
-                phoneNo = ""+delivery_boy_details.get("phoneNo");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                url = ""+delivery_boy_details.get("url");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            saveDeliveryBoyDetails(name,phoneNo,url);
-
+            title = "Delivery boy has arrived";
+            message = "For OrderId : "+orderId;
+            Log.d(TAG,"Title : "+title+" * Message : "+message);
+            sendNotification(title,message);
+            loadDeliveryBoyReachedData();
+            listDeliveryBoyReached.put(delivery_boy_reached);
+            saveDeliveryBoyReachedData(listDeliveryBoyReached);
         }
 
     }
@@ -252,24 +295,34 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
         Log.d(TAG,""+list.toString());
     }
 
-    public void saveNewSubscriptionData(subscription_dataholder order) {
+    public void saveNewSubscriptionData(JSONArray listSubscription) {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for newSubscription", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(order);
-        editor.putString("order", json);
+        String json = gson.toJson(listSubscription);
+        editor.putString("list", json);
         editor.apply();
-        Log.d(TAG,""+order.toString());
+        Log.d(TAG,""+listSubscription.toString());
     }
 
-    public void saveDeliveryBoyDetails(String name , String phoneNo, String url) {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for newOrder", MODE_PRIVATE);
+    public void saveDeliveryBoyReachedData(JSONArray deliveryBoyReached) {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyReached", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("name", name);
-        editor.putString("phoneNo", phoneNo);
-        editor.putString("url", url);
+        Gson gson = new Gson();
+        String json = gson.toJson(deliveryBoyReached);
+        editor.putString("list", json);
         editor.apply();
-        Log.d(TAG,name +"*"+phoneNo+"*"+url);
+        Log.d(TAG,""+deliveryBoyReached.toString());
+    }
+
+    public void saveDeliveryBoyDetailsData(JSONArray deliveryBoyDetails) {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyDetails", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(deliveryBoyDetails);
+        editor.putString("list", json);
+        editor.apply();
+        Log.d(TAG,""+deliveryBoyDetails.toString());
     }
 
     public void  loadNewOrderData(){
@@ -281,6 +334,42 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
 
         if (listOrders == null) {
             listOrders = new ArrayList<>();
+        }
+    }
+
+    public void  loadNewSubscriptionData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for newSubscription", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<JSONArray>() {}.getType();
+        listSubscription = gson.fromJson(json, type);
+
+        if (listSubscription == null) {
+            listSubscription = new JSONArray();
+        }
+    }
+
+    public void  loadDeliveryBoyReachedData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyReached", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<JSONArray>() {}.getType();
+        listDeliveryBoyReached = gson.fromJson(json, type);
+
+        if (listDeliveryBoyReached == null) {
+            listDeliveryBoyReached = new JSONArray();
+        }
+    }
+
+    public void  loadDeliveryBoyDetailsData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyDetails", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<JSONArray>() {}.getType();
+        listDeliveryBoyDetails = gson.fromJson(json, type);
+
+        if (listDeliveryBoyDetails == null) {
+            listDeliveryBoyDetails = new JSONArray();
         }
     }
 }

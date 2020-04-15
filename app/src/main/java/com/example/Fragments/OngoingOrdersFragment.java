@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.arch.core.executor.TaskExecutor;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.Adapters.NewOrderAdapter;
 import com.example.Constants.ApiInterface;
 import com.example.Constants.ApiUtils;
-import com.example.Models.MyHistoryItems;
-import com.example.Models.NewOrders;
 import com.example.Models.OrderDescriptionResponse;
 import com.example.Models.OrderHistoryResponse;
-import com.example.vendor.HomeActivity;
 import com.example.vendor.ProductsClient;
 import com.example.vendor.R;
 import com.google.gson.Gson;
@@ -33,7 +29,6 @@ import com.pusher.client.channel.SubscriptionEventListener;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -124,7 +119,7 @@ public class OngoingOrdersFragment extends Fragment {
         iga.setOnItemClickListener(new NewOrderAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                ((HomeActivity)getActivity()).loadOngoingfragment(myOrders.get(position));
+//                ((HomeActivity)getActivity()).loadOngoingfragment(myOrders.get(position));
             }
         });
     }

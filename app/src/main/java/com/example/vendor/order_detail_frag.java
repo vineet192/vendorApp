@@ -84,7 +84,6 @@ public class order_detail_frag extends Fragment {
         View rootView = inflater.inflate(R.layout.frag_order_details, container, false);
         sharedPref = getContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
 
-
         order_detail_recycler = rootView.findViewById(R.id.order_detail_recycler);
 
         order_detail_recycler.setHasFixedSize(true);
@@ -144,8 +143,8 @@ public class order_detail_frag extends Fragment {
                 JSONObject orders_ = new JSONObject();
 
                 HashMap<String, String> op = new HashMap<>();
-                op.put("vendor_phone", new_order_frag.ve);
-                op.put("order_Id", new_order_frag.o);
+                op.put("vendor_phone", "3");
+                op.put("order_Id", orderid_);
                 try {
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);
@@ -233,8 +232,8 @@ public class order_detail_frag extends Fragment {
 
                 JSONArray a = new JSONArray();
                 HashMap<String, String> op = new HashMap<>();
-                op.put("order_Id", new_order_frag.o);
-                op.put("vendor_phone", new_order_frag.ve);
+                op.put("order_Id", orderid_);
+                op.put("vendor_phone", "3");
                 List<String> list = new ArrayList<>();
                 op.put("items", String.valueOf(list));
                 String outputreq = gson.toJson(op);
@@ -304,74 +303,12 @@ public class order_detail_frag extends Fragment {
 
     }
 
-    public void loadData() {
-        HashMap<String, String> op = new HashMap<>();
-        op.put("vendor_phone", "3");
-        op.put("order_id", "c3cc75c1-4fc3-49ef-9b0a-75a8e4f1bb99");
-        String outputreq = gson.toJson(op);
-
-        Log.d("input", outputreq);
-
-        try {
-            HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_recieve).openConnection()));
-            httpcon.setDoOutput(true);
-            httpcon.setRequestProperty("Content-Type", "application/json");
-            httpcon.setRequestProperty("Accept", "application/json");
-            httpcon.setRequestMethod("POST");
-            httpcon.connect();
-
-            OutputStream os = httpcon.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            writer.write(Order_detail.tempdata_);
-            writer.close();
-            os.close();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "UTF-8"));
-
-            String line = null;
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            br.close();
-            Log.d("comingdata", sb.toString());
-            String o = sb.toString();
-            order_Detail = sb.toString();
-            Log.d("comingdataa", order_Detail);
-
-            String temp1 = "new_orders" + orderid_;
-
-            Toast.makeText(getContext(), order_Detail, Toast.LENGTH_LONG).show();
-
-            edit = sharedPref.edit();
-            edit.putString(temp1, order_Detail);
-            edit.commit();
-            loadrecycler();
-
-        } catch (MalformedURLException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-            Log.d("MalformedURLException", e.getMessage());
-        } catch (ProtocolException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-            Log.d("ProtocolException", e.getMessage());
-        } catch (IOException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-            Log.d("IOException", e.getMessage());
-
-        }
-    }
-
     public void loadrecycler() {
         try {
-            String jsonGet = sharedPref.getString("put the name", null);
+            String jsonGet = sharedPref.getString("shared preferences for newOrder", null);
             JSONObject ob = new JSONObject(jsonGet);
 
-            JSONArray array = ob.getJSONArray("neworder");
+            JSONArray array = ob.getJSONArray("list");
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
                 if (orderid_.equals(object.getString("order_id"))) ;
@@ -383,7 +320,7 @@ public class order_detail_frag extends Fragment {
                     totalcost.setText(("total_price"));
 
                     namearr = object.getJSONArray("total_order");
-                    quanarr = object.getJSONArray("quan");
+                    quanarr = object.getJSONArray("quantity");
 
                     JSONObject object2 = new JSONObject();
                     object2.put("name", namearr);

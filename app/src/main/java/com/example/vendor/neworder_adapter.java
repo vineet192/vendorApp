@@ -284,9 +284,8 @@ public class neworder_adapter extends RecyclerView.Adapter<neworder_adapter.new_
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context.getApplicationContext(), Order_detail.class);
-//                intent.putExtra("Order",new_order_frag.JsonData);
-                intent.putExtra("OrderId", holder.orderID.getText());
+                Intent intent = new Intent(context, Order_detail.class);
+                intent.putExtra("OrderId",listItem.getOrderID());
                 context.startActivity(intent);
             }
         });

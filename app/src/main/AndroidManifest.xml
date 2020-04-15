@@ -54,7 +54,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeScreen" />
-        <activity android:name=".HomeActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

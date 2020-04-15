@@ -19,7 +19,6 @@ import com.example.Models.MyItem;
 import com.example.Models.NewOrders;
 import com.example.Models.OrderDescriptionResponse;
 import com.example.Models.OrderHistoryResponse;
-import com.example.vendor.HomeActivity;
 import com.example.vendor.ProductsClient;
 import com.example.vendor.R;
 import com.pusher.client.Pusher;
@@ -158,7 +157,7 @@ public class NewItemFrgament extends Fragment{
         iga.setOnItemClickListener(new NewOrderAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                ((HomeActivity) Objects.requireNonNull(getActivity())).loadOrderDescription(allOrderList.get(position));
+//                ((HomeActivity) Objects.requireNonNull(getActivity())).loadOrderDescription(allOrderList.get(position));
             }
         });
     }

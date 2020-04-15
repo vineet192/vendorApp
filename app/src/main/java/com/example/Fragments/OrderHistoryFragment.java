@@ -15,15 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.Adapters.NewOrderAdapter;
 import com.example.Constants.ApiInterface;
 import com.example.Constants.ApiUtils;
-import com.example.Models.MyHistoryItems;
-import com.example.Models.NewOrders;
 import com.example.Models.OrderDescriptionResponse;
 import com.example.Models.OrderHistoryResponse;
-import com.example.vendor.HomeActivity;
 import com.example.vendor.ProductsClient;
 import com.example.vendor.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -85,7 +81,7 @@ public class OrderHistoryFragment extends Fragment {
         iga.setOnItemClickListener(new NewOrderAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                ((HomeActivity)getActivity()).loadHistoryfragment(myOrders.get(position));
+//                ((HomeActivity)getActivity()).loadHistoryfragment(myOrders.get(position));
             }
         });
     }

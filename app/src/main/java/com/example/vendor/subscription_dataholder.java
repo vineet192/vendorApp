@@ -1,11 +1,40 @@
 package com.example.vendor;
 
+import org.json.JSONArray;
+
 public class subscription_dataholder {
 
 
     String orderID,startdate,enddate,total_price,timer,deliveryboy_arivingtime,
             deliveryboy_phone,deliveryboy_otp,product_name,product_price,
             prod_quantity,prod_total_price,package_status,subscription_type;
+
+    public String getTimer() {
+        return timer;
+    }
+
+    public String getDeliveryboy_arivingtime() {
+        return deliveryboy_arivingtime;
+    }
+
+    public JSONArray getSubsTotalOrders() {
+        return SubsTotalOrders;
+    }
+
+    public void setSubsTotalOrders(JSONArray subsTotalOrders) {
+        SubsTotalOrders = subsTotalOrders;
+    }
+
+    public JSONArray getSubsQuantity() {
+        return SubsQuantity;
+    }
+
+    public void setSubsQuantity(JSONArray subsQuantity) {
+        SubsQuantity = subsQuantity;
+    }
+
+    JSONArray SubsTotalOrders;
+    JSONArray SubsQuantity;
 
     public  subscription_dataholder(){}
     public subscription_dataholder(String orderID, String startdate, String enddate, String total_price,String subscription_type) {

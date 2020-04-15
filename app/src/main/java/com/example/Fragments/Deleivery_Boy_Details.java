@@ -25,8 +25,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.Models.DeleiveryBoy;
-import com.example.Models.OrderDescriptionResponse;
-import com.example.vendor.HomeActivity;
 import com.example.vendor.ProductsClient;
 import com.example.vendor.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -162,8 +160,6 @@ public class Deleivery_Boy_Details extends Fragment {
                                 ((ProductsClient)getContext().getApplicationContext()).setUserlat(String.valueOf(mLastKnownLocation.getLatitude()));
                                 ((ProductsClient)getContext().getApplicationContext()).setUserlon(String.valueOf(mLastKnownLocation.getLongitude()));
                                 Toast.makeText(getContext(), "Tracking...", Toast.LENGTH_SHORT).show();
-                                ((HomeActivity) getActivity()).loaddeliveryboytrackingfragment(details.getDel_boy_name()
-                                        ,details.getDel_boy_phone());
                             } else {
                                 final LocationRequest locationRequest = LocationRequest.create();
                                 locationRequest.setInterval(10000);
@@ -180,8 +176,6 @@ public class Deleivery_Boy_Details extends Fragment {
                                         ((ProductsClient)getContext().getApplicationContext()).setUserlat(String.valueOf(mLastKnownLocation.getLatitude()));
                                         ((ProductsClient)getContext().getApplicationContext()).setUserlon(String.valueOf(mLastKnownLocation.getLongitude()));
                                         Toast.makeText(getContext(), "Tracking...", Toast.LENGTH_SHORT).show();
-                                        ((HomeActivity) getActivity()).loaddeliveryboytrackingfragment(details.getDel_boy_name()
-                                                ,details.getDel_boy_phone());
                                     }
                                 };
                                 mFusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);

@@ -21,19 +21,9 @@ import com.example.Constants.ApiUtils;
 import com.example.Models.DeleiveryBoy;
 import com.example.Models.ItemSavingResponse;
 import com.example.Models.OrderDescriptionResponse;
-import com.example.Models.OrderHistoryResponse;
 import com.example.Models.ProductDescriptionResponse;
-import com.example.vendor.HomeActivity;
 import com.example.vendor.ProductsClient;
 import com.example.vendor.R;
-import com.google.gson.Gson;
-import com.pusher.client.Pusher;
-import com.pusher.client.PusherOptions;
-import com.pusher.client.channel.Channel;
-import com.pusher.client.channel.PusherEvent;
-import com.pusher.client.channel.SubscriptionEventListener;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +116,7 @@ public class PendingFragment extends Fragment {
                                 Toast.makeText(getContext(), "No deleivery boy assigned yet !", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                ((HomeActivity) getActivity()).loadDeleiveryBoyDetails(response.body());
+//                                ((HomeActivity) getActivity()).loadDeleiveryBoyDetails(response.body());
                             }
                         } else {
                             Toast.makeText(getContext(), "Response from server is not successful", Toast.LENGTH_SHORT).show();
