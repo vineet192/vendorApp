@@ -116,7 +116,6 @@ public class order_detail_frag extends Fragment {
 
         temp2 = "new_orders" + orderid_;
 
-        Toast.makeText(getContext(), "not stored", Toast.LENGTH_LONG).show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -305,8 +304,10 @@ public class order_detail_frag extends Fragment {
 
     public void loadrecycler() {
         try {
-            String jsonGet = sharedPref.getString("shared preferences for newOrder", null);
+            String jsonGet = sharedPref.getString("newordernotify", null);
             JSONObject ob = new JSONObject(jsonGet);
+
+            Log.d("second",jsonGet);
 
             JSONArray array = ob.getJSONArray("list");
             for (int i = 0; i < array.length(); i++) {

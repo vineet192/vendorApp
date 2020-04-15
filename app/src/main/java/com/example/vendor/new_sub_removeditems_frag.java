@@ -31,7 +31,7 @@ public class new_sub_removeditems_frag extends Fragment {
 
     ArrayList<String> productnamelist = new ArrayList<>();
     ArrayList<String> productpricelist = new ArrayList<>();
-    private List<subscription_dataholder> list = new ArrayList<>();
+    private List<neworders_model> list = new ArrayList<>();
 
     public JSONArray array, arr;
     public JSONObject obj, object;
@@ -51,7 +51,7 @@ public class new_sub_removeditems_frag extends Fragment {
 
     TextView price_total,enddate,startdate;
 
-    String temp;
+    String temp,temp2;
 
 
     @Nullable
@@ -80,7 +80,8 @@ public class new_sub_removeditems_frag extends Fragment {
         enddate.setText(new_subs_detail_frag.EndDate);
         price_total.setText(new_subs_detail_frag.TotalPrice);
 
-        temp = "removed_items" + orderid_;
+        temp="removed_items"+orderid_;
+        temp2 = "new_orders" + orderid_;
 
 
 
@@ -89,15 +90,16 @@ public class new_sub_removeditems_frag extends Fragment {
 
             String jsonGet = sharedPref.getString(temp, null);
             try {
-                array = new JSONArray(jsonGet);
+                object = new JSONObject(jsonGet);
+                array=object.getJSONArray("name");
+                arr=object.getJSONArray("quan");
                 for (int i = 0; i < array.length(); i++) {
-                    JSONObject object1 = array.getJSONObject(i);
-                    productnamelist.add((String) object1.get("product_name"));
-                    productpricelist.add((String.valueOf(object1.get("product_price"))));
+                    productnamelist.add(array.getString(i));
+                    productpricelist.add(arr.getString(i));
                 }
 
                 for (int i = 0; i < array.length(); i++) {
-                    subscription_dataholder List = new subscription_dataholder(productnamelist.get(i), productpricelist.get(i));
+                    neworders_model List = new neworders_model(productnamelist.get(i), productpricelist.get(i));
                     list.add(List);
                 }
                 adapter = new new_sub_removeitem_adapter(list, getActivity());
@@ -111,6 +113,7 @@ public class new_sub_removeditems_frag extends Fragment {
                 e.printStackTrace();
             }
         }
+
 
         return rootView;
 

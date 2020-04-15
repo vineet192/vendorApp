@@ -3,6 +3,7 @@ package com.example.Utility;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class NotificationsMessagingService extends FirebaseMessagingService {
@@ -56,25 +58,95 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
         JSONObject delivery_boy_reached = null;
 
         try {
-            new_order = new JSONObject(jsnobject.getString("new_order"));
+            String jsnobjectString= jsnobject.getString("new_order");
+            Log.d("nine", String.valueOf(jsnobjectString));
+
+            new_order = new JSONObject(jsnobjectString);
+            SharedPreferences  sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE);
+            JSONArray a= new JSONArray();
+            SharedPreferences.Editor edit;
+
+            Log.d("one", String.valueOf(new_order));
+
+            if (sharedPref.contains("newordernotify"))
+            {
+                String s=sharedPref.getString("newordernotify",null);
+                Log.d("seven",s);
+                JSONObject o= new JSONObject(s);
+                a=o.getJSONArray("list");
+                a.put(new_order);
+                JSONObject o1= new JSONObject();
+                o1.put("list",a);
+                edit=sharedPref.edit();
+                edit.remove("newordernotify");
+                edit.putString("newordernotify", String.valueOf(o1));
+                edit.apply();
+
+            }
+            else {
+                JSONObject o= new JSONObject();
+                a.put(new_order);
+                o.put("list",String.valueOf(a));
+                Log.d("six",String.valueOf(o));
+                sharedPref.edit();
+                edit=sharedPref.edit();
+                edit.putString("newordernotify", String.valueOf(o));
+                edit.commit();
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         try {
-            new_subscription = new JSONObject(jsnobject.getString("new_subscription"));
+            String jsnobjectString= jsnobject.getString("newsubnotify");
+            Log.d("nine", String.valueOf(jsnobjectString));
+
+            new_subscription = new JSONObject(jsnobjectString);
+            SharedPreferences  sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE);
+            JSONArray a= new JSONArray();
+            SharedPreferences.Editor edit;
+
+            if (sharedPref.contains("newsubnotify"))
+            {
+                String s=sharedPref.getString("newsubnotify",null);
+                Log.d("seven",s);
+                JSONObject o= new JSONObject(s);
+                a=o.getJSONArray("list");
+                a.put(new_order);
+                JSONObject o1= new JSONObject();
+                o1.put("list",a);
+                edit=sharedPref.edit();
+                edit.remove("newsubnotify");
+                edit.putString("newsubnotify", String.valueOf(o1));
+                edit.apply();
+
+            }
+            else {
+                JSONObject o= new JSONObject();
+                a.put(new_subscription);
+                o.put("list",String.valueOf(a));
+                Log.d("six",String.valueOf(o));
+                sharedPref.edit();
+                edit=sharedPref.edit();
+                edit.putString("newsubnotify", String.valueOf(o));
+                edit.commit();
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         try {
             delivery_boy_details = new JSONObject(jsnobject.getString("delivery_boy_details" ));
+            Log.d("three", String.valueOf(delivery_boy_details));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         try {
             delivery_boy_reached = new JSONObject(jsnobject.getString("delivery_boy_reached" ));
+            Log.d("four", String.valueOf(delivery_boy_reached));
         } catch (JSONException e) {
             e.printStackTrace();
         }

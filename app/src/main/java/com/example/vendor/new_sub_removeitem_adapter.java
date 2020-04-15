@@ -26,16 +26,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_removeitem_adapter.sub_removeitem_ViewHolder> {
 
 
-    List<subscription_dataholder> sub_Orderdetail_dataholderList;
+    List<neworders_model> sub_Orderdetail_dataholderList;
     Context context;
 
     JSONObject obj, object;
-
-
-
-
-    public HashMap<String, String> removedItem = new HashMap<>();
-    public List<HashMap> removedItems = new ArrayList<>();
     Gson gson = new Gson();
 
     public SharedPreferences sharedPref;
@@ -46,11 +40,17 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
 
     String temp;
 
+    JSONArray namearr=new JSONArray();
+    JSONArray quanarr=new JSONArray();
+    JSONArray namearr1=new JSONArray();
+    JSONArray quanarr1=new JSONArray();
+    JSONArray namearr2=new JSONArray();
+    JSONArray quanarr2=new JSONArray();
 
-    String removedJson, removedJson1;
+    String removedJson, removedJson1,temp2;
 
 
-    public new_sub_removeitem_adapter(List<subscription_dataholder> sub_Orderdetail_dataholderList, Context context) {
+    public new_sub_removeitem_adapter(List<neworders_model> sub_Orderdetail_dataholderList, Context context) {
         this.sub_Orderdetail_dataholderList = sub_Orderdetail_dataholderList;
         this.context = context;
     }
@@ -62,9 +62,33 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_sub_removeditem_layout, parent, false);
         sharedPref = context.getSharedPreferences("myPref", Context.MODE_PRIVATE);
         orderid_ = new_subs_detail.orderId_;
-        removedJson = new_sub_removeditems_frag.removedJson;
 
-        temp = "removed_items" + orderid_;
+        temp= "removed_items"+orderid_;
+        temp2="new_orders"+orderid_;
+
+        if ((sharedPref.contains(temp))) {
+
+            removedJson = sharedPref.getString(temp, null);
+            try {
+                JSONObject object3=new JSONObject(removedJson);
+                namearr=object3.getJSONArray("name");
+                quanarr=object3.getJSONArray("quan");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if ((sharedPref.contains(temp2))) {
+
+            removedJson = sharedPref.getString(temp, null);
+            try {
+                JSONObject object3=new JSONObject(removedJson);
+                namearr1=object3.getJSONArray("name");
+                quanarr1=object3.getJSONArray("quan");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
 
 
@@ -75,10 +99,10 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
     @Override
     public void onBindViewHolder(@NonNull final new_sub_removeitem_adapter.sub_removeitem_ViewHolder holder, int position) {
 
-        final subscription_dataholder listItem = sub_Orderdetail_dataholderList.get(position);
+        final neworders_model listItem = sub_Orderdetail_dataholderList.get(position);
 
-        holder.product_name.setText(listItem.getProduct_name());
-        holder.product_price.setText(listItem.getProduct_price());
+        holder.product_name.setText(listItem.getProd_name());
+        holder.product_price.setText(listItem.getProd_quan());
 
 
         holder.restore_tv.setOnClickListener(new View.OnClickListener() {
@@ -99,58 +123,35 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
                                 JSONArray array = new JSONArray();
 
 
-                                if ((sharedPref.contains(temp))) {
-
-                                    removedJson = sharedPref.getString(temp, null);
-                                    try {
-                                        array = new JSONArray(removedJson);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    Log.d("on accept", String.valueOf(removedJson));
-                                }
-
-                                removedJson1 = new_subs_detail_frag.order_Detail;
                                 try {
-                                    JSONObject o3=new JSONObject(removedJson1);
-                                    a4=o3.getJSONArray("items");
+                                    for (int i = 0; i < namearr.length(); i++) {
+                                        if (namearr.getString(i).equals(holder.product_name.getText())) {
+                                            namearr1.put(namearr.getString(i));
+                                            quanarr1.put(quanarr.getString(i));
+                                            JSONObject object=new JSONObject();
+                                            object.put("name",namearr1);
+                                            object.put("quan",quanarr1);
+                                            edit = sharedPref.edit();
+                                            edit.putString(temp2, String.valueOf(object));
+                                            edit.commit();
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                                try {
-                                    for (int i = 0; i < array.length(); i++) {
-                                        JSONObject object1 = array.getJSONObject(i);
-                                        if (object1.get("product_name").equals(holder.product_name.getText())) {
-                                            a4.put(object1);
-
-                                        } else
-                                            a5.put(object1);
+                                        } else {
+                                            namearr2.put(namearr.getString(i));
+                                            quanarr2.put(quanarr.getString(i));
+                                        }
                                     }
 
-                                    object = new JSONObject(removedJson1);
-                                    object.remove("items");
-                                    object.put("items", a4);
-
-                                    Log.d("checkobj", String.valueOf(object));
-                                    Log.d("a5check", String.valueOf(a5));
-
-                                    String temp5="new_orders"+orderid_;
-                                    edit = sharedPref.edit();
-                                    edit.putString(temp5, String.valueOf(object));
-                                    edit.commit();
-
+                                    JSONObject jsonObject=new JSONObject();
+                                    jsonObject.put("name",namearr2);
+                                    jsonObject.put("quan",quanarr2);
                                     edit = sharedPref.edit();
                                     edit.remove(temp);
-                                    edit.putString(temp, String.valueOf(a5));
+                                    edit.putString(temp, String.valueOf(jsonObject));
                                     edit.apply();
 
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
                                 }
-
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)

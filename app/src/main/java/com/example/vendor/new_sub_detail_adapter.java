@@ -23,24 +23,26 @@ import androidx.recyclerview.widget.RecyclerView;
 public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_adapter.newsubsorderdetail_ViewHolder> {
 
 
-    List<subscription_dataholder> newsubsdetail_dataholderList;
+    List<neworders_model> newsubsdetail_dataholderList;
     Activity context;
 
     public SharedPreferences sharedPref;
     SharedPreferences.Editor edit;
     String orderid_;
 
-    JSONArray a= new JSONArray();
-
+    JSONArray a=new JSONArray();
+    JSONArray a2=new JSONArray();
     JSONArray array, arr;
     JSONObject obj, object;
+    JSONArray namearr=new JSONArray();
+    JSONArray quanarr=new JSONArray();
 
 
-    static String removedjson,temp;
+    static String removedjson,temp,temp2;
 
 
 
-    public new_sub_detail_adapter(List<subscription_dataholder> newsubsdetail_dataholderList, Activity context) {
+    public new_sub_detail_adapter(List<neworders_model> newsubsdetail_dataholderList, Activity context) {
         this.newsubsdetail_dataholderList = newsubsdetail_dataholderList;
         this.context = context;
     }
@@ -54,17 +56,18 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
         orderid_ = new_subs_detail.orderId_;
 
         temp = "removed_items" + orderid_;
-
+        temp2="new_orders" + orderid_;
 
         if ((sharedPref.contains(temp))) {
 
             removedjson = sharedPref.getString(temp, null);
             try {
-                a = new JSONArray(removedjson);
+                JSONObject object3=new JSONObject(removedjson);
+                namearr=object3.getJSONArray("name");
+                quanarr=object3.getJSONArray("quan");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("on accept", String.valueOf(a));
         }
 
         return new new_sub_detail_adapter.newsubsorderdetail_ViewHolder(v);
@@ -73,10 +76,10 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
     @Override
     public void onBindViewHolder(@NonNull new_sub_detail_adapter.newsubsorderdetail_ViewHolder holder, int position) {
 
-        subscription_dataholder ListItem= newsubsdetail_dataholderList.get(position);
+        neworders_model ListItem= newsubsdetail_dataholderList.get(position);
 
-        holder.product_price.setText(ListItem.getProduct_price());
-        holder.product_name.setText(ListItem.getProduct_name());
+        holder.product_price.setText(ListItem.getProd_quan());
+        holder.product_name.setText(ListItem.getProd_name());
 
         holder.remove_tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,81 +128,6 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
                                 }
-
-//                                try {
-//                                    String jsonGet = sharedPref.getString("new_subscription", null);
-////                                    obj=new JSONObject(jsonGet);
-////                                    array=obj.getJSONArray("");
-//                                    array = new JSONArray(jsonGet);
-//                                    JSONArray a1= new JSONArray();
-//
-//                                    for (int i = 0; i < array.length(); i++) {
-//                                        JSONObject ob = array.getJSONObject(i);
-//                                        if (ob.getString("order_id").equals(orderid_)) {
-//                                            arr = ob.getJSONArray("items");
-//                                            Log.d("without removing", String.valueOf(arr));
-//
-//                                            for (int j = 0; j < arr.length(); j++) {
-//                                                JSONObject object1 = arr.getJSONObject(j);
-//                                                if (object1.get("prod_name").equals(holder.product_name.getText())) {
-////                                                    HashMap<String, JSONObject> t = new HashMap<>();
-////                                                    t.put("category_name", (JSONObject) object1.get("category_name"));
-////                                                    t.put("prod_name", (JSONObject) object1.get("prod_name"));
-////                                                    t.put("prod_id", (JSONObject) object1.get("prod_id"));
-////                                                    t.put("prod_price", (JSONObject) object1.get("prod_price"));
-////                                                    t.put("prod_rating", (JSONObject) object1.get("prod_rating"));
-////                                                    t.put("prod_desc", (JSONObject) object1.get("prod_desc"));
-////                                                    t.put("prod_img", (JSONObject) object1.get("prod_img"));
-////                                                    t.put("quantity", (JSONObject) object1.get("quantity"));
-////                                                    t.put("check", (JSONObject) object1.get("check"));
-//                                                    a.put(object1);
-//
-//                                                    edit = sharedPref.edit();
-//                                                    edit.putString("sub_removed_items", String.valueOf(a));
-//                                                    edit.commit();
-//
-////                                                    sharedList.add(object1);
-//                                                } else {
-////                                                    JSONObject t = new JSONObject();
-//
-////                                                    t.put("category_name", object1.get("category_name"));
-////                                                    t.put("prod_name", object1.get("prod_name"));
-////                                                    t.put("prod_id", object1.get("prod_id"));
-////                                                    t.put("prod_price", object1.get("prod_price"));
-////                                                    t.put("prod_rating", object1.get("prod_rating"));
-////                                                    t.put("prod_desc", object1.get("prod_desc"));
-////                                                    t.put("prod_img", object1.get("prod_img"));
-////                                                    t.put("quantity", object1.get("quantity"));
-////                                                    t.put("check", object1.get("check"));
-//
-//                                                    a1.put(object1);
-//
-//                                                }
-//
-//                                            }
-//                                            ob.put("items",a1);
-//                                            edit = sharedPref.edit();
-//                                            edit.putString("new_subscription", String.valueOf(array));
-//                                            edit.commit();
-//
-////                                            array.getJSONObject(i).remove("items");
-////                                            array.getJSONObject(i).put("items", _sharedList_);
-////                                            Log.d("shared list", String.valueOf(_sharedList_));
-////                                            Log.d("modified array", String.valueOf(array));
-////                                            Log.d("shared list remove", String.valueOf(sharedList));
-//                                        }
-//                                        Log.d("array data", String.valueOf(array));
-//                                    }
-////                                    edit = sharedPref.edit();
-////                                    edit.putString("new_order", String.valueOf(array));
-////                                    edit.apply();
-//
-////                                    Log.d("modified data", sharedPref.getString("new_order", null));
-////                                    Log.d("removed_list", sharedPref.getString("removed_items", null));
-//
-//                                } catch (JSONException ex) {
-//                                    ex.printStackTrace();
-//                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -208,6 +136,75 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
 
             }
         });
+
+        holder.remove_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(context)
+                        .setTitle("Cancel order")
+                        .setMessage("Are you sure you want to cancel this order?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                newsubsdetail_dataholderList.remove(holder.getAdapterPosition());
+                                notifyItemRemoved(holder.getAdapterPosition());
+                                notifyItemRangeChanged(holder.getAdapterPosition(), newsubsdetail_dataholderList.size());
+
+
+                                try {
+                                    String jsonGet=sharedPref.getString(temp2,null);
+                                    obj = new JSONObject(jsonGet);
+
+                                    JSONArray a1 = new JSONArray();
+                                    JSONArray quanarr1=new JSONArray();
+                                    JSONArray namearr1=new JSONArray();
+
+                                    arr = obj.getJSONArray("name");
+                                    a1=obj.getJSONArray("quan");
+                                    JSONObject jsonObject1=new JSONObject();
+
+                                    for (int j = 0; j < arr.length(); j++) {
+                                        if (arr.getString(j).equals(holder.product_name.getText())) {
+
+                                            namearr.put(arr.getString(j));
+
+                                            quanarr.put(a1.getString(j));
+
+                                            JSONObject jsonObject=new JSONObject();
+                                            jsonObject.put("name",namearr);
+                                            jsonObject.put("quan",quanarr);
+
+                                            edit = sharedPref.edit();
+                                            edit.putString(temp, String.valueOf(jsonObject));
+                                            edit.commit();
+
+                                        } else {
+                                            namearr1.put(arr.getString(j));
+
+                                            quanarr1.put(a1.getString(j));
+
+                                        }
+
+                                    }
+                                    jsonObject1.put("name",namearr1);
+                                    jsonObject1.put("quan",quanarr1);
+                                    a2.put(jsonObject1);
+                                    edit = sharedPref.edit();
+                                    edit.putString(temp2, String.valueOf(jsonObject1));
+                                    edit.apply();
+
+                                } catch (JSONException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            }
+        });
+
 
 
 

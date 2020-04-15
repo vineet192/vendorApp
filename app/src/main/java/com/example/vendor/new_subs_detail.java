@@ -32,9 +32,8 @@ public class new_subs_detail extends AppCompatActivity {
 
 
         Intent intent=getIntent();
-//        orderId_=intent.getStringExtra("OrderId");
-        orderId_= new_subscription_frag.o;
-        tempdata_=intent.getStringExtra("data");
+        orderId_=intent.getStringExtra("OrderId");
+//        tempdata_=intent.getStringExtra("data");
 
 
 
@@ -64,18 +63,18 @@ public class new_subs_detail extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.frag, new new_subs_detail_frag()).commit();
         }
 //
-//        schedule_ly.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.frag, new new_subs_schedule_frag()).commit();
-//                subscription_tv.setTextColor(Color.BLACK);
-//                schedule_tv.setTextColor(Color.RED);
-//                schedule_ly.setBackgroundResource(R.drawable.click_shape);
-//                subscription_ly.setBackgroundResource(R.drawable.shape);
-//                remove_tv.setTextColor(Color.BLACK);
-//                remove_ly.setBackgroundResource(R.drawable.shape);
-//            }
-//        });
+        schedule_ly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frag, new new_subs_schedule_frag()).commit();
+                subscription_tv.setTextColor(Color.BLACK);
+                schedule_tv.setTextColor(Color.RED);
+                schedule_ly.setBackgroundResource(R.drawable.click_shape);
+                subscription_ly.setBackgroundResource(R.drawable.shape);
+                remove_tv.setTextColor(Color.BLACK);
+                remove_ly.setBackgroundResource(R.drawable.shape);
+            }
+        });
 
         subscription_ly.setOnClickListener(new View.OnClickListener() {
             @Override

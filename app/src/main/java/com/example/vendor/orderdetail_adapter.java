@@ -33,8 +33,7 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
     JSONArray array, arr;
     JSONObject obj, object;
 
-    public HashMap<String, String> removedItem = new HashMap<>();
-    public List<HashMap> removedItems = new ArrayList<>();
+
     Gson gson = new Gson();
 
     public SharedPreferences sharedPref;

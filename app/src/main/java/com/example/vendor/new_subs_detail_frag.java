@@ -47,12 +47,10 @@ public class new_subs_detail_frag extends Fragment {
     RecyclerView.Adapter adapter = null;
 
     ArrayList<String> productnamelist = new ArrayList<>();
-    ArrayList<String> productpricelist = new ArrayList<>();
-    ArrayList<String> prod_price = new ArrayList<>();
+    ArrayList<String> productquanlist = new ArrayList<>();
+    private List<neworders_model> list = new ArrayList<>();
 
-    private List<subscription_dataholder> list = new ArrayList<>();
-
-    public JSONArray array, arr;
+    public static JSONArray array, arr, namearr, quanarr;
     public JSONObject obj, object;
 
     public static String json;
@@ -73,7 +71,7 @@ public class new_subs_detail_frag extends Fragment {
 
     String url_recieve = "https://gocoding.azurewebsites.net/vendor/send_sorder_items/";
 
-    String temp2;
+    String temp2,temp;
 
     String url_sent, response;
 
@@ -114,24 +112,20 @@ public class new_subs_detail_frag extends Fragment {
         dialog.show();
 
 
+        sharedPref = getContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
+
+        temp="removed_items"+orderid_;
         temp2 = "new_orders" + orderid_;
 
-        if (sharedPref.contains(temp2)) {
-            order_Detail = sharedPref.getString(temp2, null);
-            Log.d("stored", order_Detail);
-            loadrecycler();
-            dialog.dismiss();
-            Toast.makeText(getContext(), "stored", Toast.LENGTH_LONG).show();
-        } else {
             Toast.makeText(getContext(), "not stored", Toast.LENGTH_LONG).show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadData();
+                    loadrecycler();
                     dialog.dismiss();
                 }
             }, 200);
-        }
+
 
         accept_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,103 +307,105 @@ public class new_subs_detail_frag extends Fragment {
     }
 
 
-    public void loadData() {
-        HashMap<String, String> op = new HashMap<>();
-        op.put("vendor_phone", "1");
-        op.put("sorder_id", "b5a36460-f710-4f07-ac57-b9b0813acd70");
-        String outputreq = gson.toJson(op);
 
-        Log.d("input", outputreq);
-
-        try {
-            HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_recieve).openConnection()));
-            httpcon.setDoOutput(true);
-            httpcon.setRequestProperty("Content-Type", "application/json");
-            httpcon.setRequestProperty("Accept", "application/json");
-            httpcon.setRequestMethod("POST");
-            httpcon.connect();
-
-            OutputStream os = httpcon.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            writer.write(new_subs_detail.tempdata_);
-            writer.close();
-            os.close();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "UTF-8"));
-
-            String line = null;
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            br.close();
-            Log.d("comingdata", sb.toString());
-            String o = sb.toString();
-            order_Detail = sb.toString();
-            Log.d("comingdataa", order_Detail);
-
-            String temp1 = "new_orders" + orderid_;
-
-            Toast.makeText(getContext(), order_Detail, Toast.LENGTH_LONG).show();
-
-            edit = sharedPref.edit();
-            edit.putString(temp1, order_Detail);
-            edit.commit();
-            loadrecycler();
-
-        } catch (MalformedURLException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-            Log.d("MalformedURLException", e.getMessage());
-        } catch (ProtocolException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-            Log.d("ProtocolException", e.getMessage());
-        } catch (IOException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-            Log.d("IOException", e.getMessage());
-
-        }
-    }
+//    public void loadrecycler() {
+//        try {
+//            String jsonGet = sharedPref.getString(temp2, null);
+//            JSONObject ob = new JSONObject(jsonGet);
+//
+//            arr = ob.getJSONArray("items");
+//
+//            JSONObject o9 = arr.getJSONObject(0);
+//
+//            startDate.setText(("date"));
+//            endDate.setText(("enddate"));
+//            deliverycharge.setText(("delivery_charge"));
+//            tax.setText(("tax"));
+//            totalcost.setText(("total_price"));
+//            StartDate=startDate.getText().toString();
+//            EndDate=endDate.getText().toString();
+//            TotalPrice=totalcost.getText().toString();
+//
+//            for (int j = 0; j < arr.length(); j++) {
+//                JSONObject object1 = arr.getJSONObject(j);
+//                productnamelist.add((String) object1.get("product_name"));
+//                productpricelist.add((String.valueOf(object1.get("product_price"))));
+//            }
+//            for (int i = 0; i < arr.length(); i++) {
+//                subscription_dataholder List = new subscription_dataholder(productnamelist.get(i), productpricelist.get(i));
+//                list.add(List);
+//            }
+//            adapter = new new_sub_detail_adapter(list, getActivity());
+//            new_subs_detail_recycler.setAdapter(adapter);
+//            dialog.dismiss();
+//            adapter = null;
+//            list = new ArrayList<>();
+//
+//        } catch (JSONException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     public void loadrecycler() {
         try {
-            String jsonGet = sharedPref.getString(temp2, null);
+            String jsonGet = sharedPref.getString("newsubnotify", null);
             JSONObject ob = new JSONObject(jsonGet);
 
-            arr = ob.getJSONArray("items");
+            Log.d("second",jsonGet);
 
-            JSONObject o9 = arr.getJSONObject(0);
+            JSONArray array = ob.getJSONArray("list");
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                if (orderid_.equals(object.getString("order_id"))) ;
+                {
+                    startDate.setText(object.getString("date"));
+                    endDate.setText(object.getString("time"));
+                    deliverycharge.setText(("delivery_charge"));
+                    tax.setText(("tax"));
+                    totalcost.setText(("total_price"));
 
-            startDate.setText(("order_date"));
-            endDate.setText(("enddate"));
-            deliverycharge.setText(("delivery_charge"));
-            tax.setText(("tax"));
-            totalcost.setText(("total_price"));
+
+                    namearr = object.getJSONArray("total_order");
+                    quanarr = object.getJSONArray("quantity");
+
+                    JSONObject object2 = new JSONObject();
+                    object2.put("name", namearr);
+                    object2.put("quan", quanarr);
+
+                    edit = sharedPref.edit();
+                    edit.putString(temp2, String.valueOf(object2));
+                    edit.commit();
+
+                    String str = sharedPref.getString(temp2, null);
+                    JSONObject object1 = new JSONObject(str);
+                    arr = object1.getJSONArray("name");
+                    for (int j = 0; j < arr.length(); j++) {
+                        productnamelist.add(arr.getString(j));
+                    }
+                    arr = object1.getJSONArray("quan");
+                    for (int j = 0; j < arr.length(); j++) {
+                        productquanlist.add(arr.getString(j));
+                    }
+                }
+            }
             StartDate=startDate.getText().toString();
             EndDate=endDate.getText().toString();
             TotalPrice=totalcost.getText().toString();
 
-            for (int j = 0; j < arr.length(); j++) {
-                JSONObject object1 = arr.getJSONObject(j);
-                productnamelist.add((String) object1.get("product_name"));
-                productpricelist.add((String.valueOf(object1.get("product_price"))));
-            }
             for (int i = 0; i < arr.length(); i++) {
-                subscription_dataholder List = new subscription_dataholder(productnamelist.get(i), productpricelist.get(i));
+                neworders_model List = new neworders_model(productnamelist.get(i), productquanlist.get(i));
                 list.add(List);
             }
             adapter = new new_sub_detail_adapter(list, getActivity());
             new_subs_detail_recycler.setAdapter(adapter);
-            dialog.dismiss();
             adapter = null;
             list = new ArrayList<>();
+            dialog.dismiss();
+
 
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
+
 }
