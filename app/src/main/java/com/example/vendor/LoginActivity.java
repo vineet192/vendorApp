@@ -308,6 +308,7 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<ResponseServerToken> call, Throwable t) {
                 Log.d("responseUNSuccessful",""+t.getMessage());
+                Toast.makeText(getApplicationContext(),"token not saved",Toast.LENGTH_LONG).show();
             }
         });
     }
