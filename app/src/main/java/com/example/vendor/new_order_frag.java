@@ -54,49 +54,6 @@ public class new_order_frag extends Fragment {
         adapter = new neworder_adapter(listOrders,getContext());
         recyclerview_new_order.setAdapter(adapter);
 
-        tempjson =inputStreamToString(getActivity().getResources().openRawResource(R.raw.json_data));
-
-        SharedPreferences  sharedPref = getContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
-
-
-        try {
-            if(sharedPref.contains("vishnu"))
-            {
-                String s=sharedPref.getString("vishnu",null);
-                JSONObject o= new JSONObject(s);
-                JSONArray a= o.getJSONArray("list");
-                JSONObject o1= new JSONObject(tempjson);
-                a.put(o1);
-                Log.d("101",String.valueOf(a));
-                HashMap<String,JSONArray> hashMap= new HashMap<>();
-                hashMap.put("list",a);
-                Log.d("102", String.valueOf(hashMap));
-                SharedPreferences.Editor editor=sharedPref.edit();
-                editor.remove("vishnu");
-                editor.putString("vishnu", String.valueOf(hashMap));
-                editor.commit();
-                String str= sharedPref.getString("vishnu",null);
-                Log.d("103",str);
-            }
-            else {
-                JSONObject o1= new JSONObject(tempjson);
-                JSONArray a= new JSONArray();
-                a.put(o1);
-                Log.d("104",String.valueOf(a));
-                HashMap<String,JSONArray> hashMap= new HashMap<>();
-                hashMap.put("list",a);
-                Log.d("105", String.valueOf(hashMap));
-                SharedPreferences.Editor editor=sharedPref.edit();
-                editor.putString("vishnu", String.valueOf(hashMap));
-                editor.commit();
-                String sttr= sharedPref.getString("vishnu",null);
-                Log.d("106",sttr);
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
 
         return rootView;
     }
@@ -113,14 +70,4 @@ public class new_order_frag extends Fragment {
         }
     }
 
-    public String inputStreamToString(InputStream inputStream) {
-        try {
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes, 0, bytes.length);
-            String json = new String(bytes);
-            return json;
-        } catch (IOException e) {
-            return null;
-        }
-    }
 }

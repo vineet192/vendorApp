@@ -22,18 +22,9 @@ import com.google.firebase.iid.InstanceIdResult;
 
 public class MainActivity_ extends AppCompatActivity
 {
-
-//    Toolbar toolbar;
-//    TextView switch_txt,current_cnt_tv,new_cnt_tv,previous_cnt_tv,orders_cnt_tv,subscription_cnt_tv;
-//    LinearLayout new_ly,current_ly,previous_ly,subscription_ly,orders_ly,offline_layout;
-//    TextView new_tv,current_tv,previous_tv,subscription_tv,orders_tv;
-//    Switch switch_btn;
-
     FrameLayout fullpagefragcontainer;
     BottomNavigationView bottom_navigation;
     SharedPreferences sharedPref;
-
-//    public int section=1,sub_section=1;
 
     ProgressDialog dialog;
 
@@ -44,9 +35,6 @@ public class MainActivity_ extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_);
-
-//        toolbar= findViewById(R.id.my_toolbar);
-//        setSupportActionBar(toolbar);
 
         bottom_navigation = findViewById(R.id.bottom_navigation);
 
@@ -70,7 +58,6 @@ public class MainActivity_ extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             Log.d("Task : ", "Hi getInstanceId failed * "+task.getException());
                             return;
-                            //Remember that there is error in generating token if mobile is not connected to internet.
                         }
                         String token = task.getResult().getToken();
                         Log.d("(Token)",token);
@@ -91,9 +78,7 @@ public class MainActivity_ extends AppCompatActivity
                         return true;
                     case R.id.Invenory:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fullpagefragcontainer, new InventoryFragment()).commit();
-                        return true;
-//                        viewFragment(new OneFragment(), FRAGMENT_OTHER);
-                    case R.id.More:
+                        return true;case R.id.More:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fullpagefragcontainer, new more_page_frag()).commit();
                         return true;
                 }

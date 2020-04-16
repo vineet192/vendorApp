@@ -69,11 +69,11 @@ public class new_subs_detail_frag extends Fragment {
 
     ProgressDialog dialog;
 
-    String url_recieve = "https://gocoding.azurewebsites.net/vendor/send_sorder_items/";
+    String url_sent = "https://gocoding.azurewebsites.net/vendor/vendorresponse/";
 
     String temp2,temp;
 
-    String url_sent, response;
+    String  response;
 
     @Nullable
     @Override
@@ -144,14 +144,13 @@ public class new_subs_detail_frag extends Fragment {
                 op.put("order_Id", orderid_);
                 op.put("vendor_phone", new_subscription_frag.ve);
                 try {
-                    JSONObject o1 = new JSONObject(order_Detail);
-                    JSONArray a1 = o1.getJSONArray("items");
-                    List<String> list = new ArrayList<>();
-                    for (int i = 0; i < a1.length(); i++) {
-                        JSONObject o5 = a1.getJSONObject(i);
-                        list.add(o5.getString("product_name"));
-                    }
-                    op.put("items", String.valueOf(list));
+                    String str = sharedPref.getString(temp2, null);
+                    JSONObject object1 = new JSONObject(str);
+                    JSONArray arr5 = object1.getJSONArray("name");
+                    JSONArray jsonArray=object1.getJSONArray("quan");
+                    op.put("items", String.valueOf(arr5));
+                    op.put("quantity", String.valueOf(jsonArray));
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -306,46 +305,6 @@ public class new_subs_detail_frag extends Fragment {
 
     }
 
-
-
-//    public void loadrecycler() {
-//        try {
-//            String jsonGet = sharedPref.getString(temp2, null);
-//            JSONObject ob = new JSONObject(jsonGet);
-//
-//            arr = ob.getJSONArray("items");
-//
-//            JSONObject o9 = arr.getJSONObject(0);
-//
-//            startDate.setText(("date"));
-//            endDate.setText(("enddate"));
-//            deliverycharge.setText(("delivery_charge"));
-//            tax.setText(("tax"));
-//            totalcost.setText(("total_price"));
-//            StartDate=startDate.getText().toString();
-//            EndDate=endDate.getText().toString();
-//            TotalPrice=totalcost.getText().toString();
-//
-//            for (int j = 0; j < arr.length(); j++) {
-//                JSONObject object1 = arr.getJSONObject(j);
-//                productnamelist.add((String) object1.get("product_name"));
-//                productpricelist.add((String.valueOf(object1.get("product_price"))));
-//            }
-//            for (int i = 0; i < arr.length(); i++) {
-//                subscription_dataholder List = new subscription_dataholder(productnamelist.get(i), productpricelist.get(i));
-//                list.add(List);
-//            }
-//            adapter = new new_sub_detail_adapter(list, getActivity());
-//            new_subs_detail_recycler.setAdapter(adapter);
-//            dialog.dismiss();
-//            adapter = null;
-//            list = new ArrayList<>();
-//
-//        } catch (JSONException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
     public void loadrecycler() {
         try {
             String jsonGet = sharedPref.getString("newsubnotify", null);
@@ -368,13 +327,15 @@ public class new_subs_detail_frag extends Fragment {
                     namearr = object.getJSONArray("total_order");
                     quanarr = object.getJSONArray("quantity");
 
-                    HashMap<String,JSONArray> object2 = new HashMap<>();
-                    object2.put("name", namearr);
-                    object2.put("quan", quanarr);
+                    if (!sharedPref.contains(temp2)) {
+                        HashMap<String, JSONArray> object2 = new HashMap<>();
+                        object2.put("name", namearr);
+                        object2.put("quan", quanarr);
 
-                    edit = sharedPref.edit();
-                    edit.putString(temp2, String.valueOf(object2));
-                    edit.commit();
+                        edit = sharedPref.edit();
+                        edit.putString(temp2, String.valueOf(object2));
+                        edit.commit();
+                    }
 
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);

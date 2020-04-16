@@ -66,7 +66,6 @@ public class order_detail_frag extends Fragment {
     Button accept_btn;
 
     static String order_Detail;
-    String url_recieve = "https://gocoding.azurewebsites.net/vendor/send_order_items/";
     String url_sent = "https://gocoding.azurewebsites.net/vendorresponse/";
 
     Gson gson = new Gson();
@@ -148,7 +147,10 @@ public class order_detail_frag extends Fragment {
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);
                     JSONArray arr5 = object1.getJSONArray("name");
+                    JSONArray jsonArray=object1.getJSONArray("quan");
                     op.put("items", String.valueOf(arr5));
+                    op.put("quantity", String.valueOf(jsonArray));
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -323,14 +325,15 @@ public class order_detail_frag extends Fragment {
                     namearr = object.getJSONArray("total_order");
                     quanarr = object.getJSONArray("quantity");
 
-                    HashMap<String,JSONArray> hashMap=new HashMap<>();
-                    JSONObject object2 = new JSONObject();
-                    hashMap.put("name", namearr);
-                    hashMap.put("quan", quanarr);
+                    if(!sharedPref.contains(temp2)) {
+                        HashMap<String, JSONArray> hashMap = new HashMap<>();
+                        hashMap.put("name", namearr);
+                        hashMap.put("quan", quanarr);
 
-                    edit = sharedPref.edit();
-                    edit.putString(temp2, String.valueOf(hashMap));
-                    edit.commit();
+                        edit = sharedPref.edit();
+                        edit.putString(temp2, String.valueOf(hashMap));
+                        edit.commit();
+                    }
 
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);
