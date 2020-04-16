@@ -59,14 +59,11 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
 
         try {
             String jsnobjectString= jsnobject.getString("new_order");
-            Log.d("nine", (jsnobjectString));
 
             new_order = new JSONObject(jsnobjectString);
             SharedPreferences  sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE);
             JSONArray a= new JSONArray();
             SharedPreferences.Editor edit;
-
-            Log.d("one", String.valueOf(new_order));
 
             if (sharedPref.contains("newordernotify"))
             {
@@ -81,7 +78,6 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 edit.remove("newordernotify");
                 edit.putString("newordernotify", String.valueOf(hashMap));
                 edit.commit();
-                Log.d("seven",s);
             }
             else {
                 a.put(new_order);
@@ -91,8 +87,6 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 edit=sharedPref.edit();
                 edit.putString("newordernotify", String.valueOf(hash));
                 edit.commit();
-                Log.d("fifone",String.valueOf(a));
-                Log.d("hundred", String.valueOf(hash));
             }
 
         } catch (JSONException e) {
@@ -101,8 +95,6 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
 
         try {
             String jsnobjectString= jsnobject.getString("newsubnotify");
-            Log.d("nine", (jsnobjectString));
-
             new_subscription = new JSONObject(jsnobjectString);
             SharedPreferences  sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE);
             JSONArray a= new JSONArray();
@@ -129,8 +121,6 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 edit=sharedPref.edit();
                 edit.putString("newsubnotify", String.valueOf(hash));
                 edit.commit();
-                Log.d("fifone",String.valueOf(a));
-                Log.d("hundred", String.valueOf(hash));
             }
 
         } catch (JSONException e) {
@@ -150,7 +140,6 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         Log.d(TAG,"newOrder = "+String.valueOf(new_order)+ " newSubs = "+String.valueOf(new_subscription)+ " deliveryDetails = "+String.valueOf(delivery_boy_details)
                + " deliveryBoyReached = "+String.valueOf(delivery_boy_reached));
@@ -205,6 +194,7 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
             saveNewOrderData(listOrders);
             startActivity(new Intent(this,MainActivity_.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
+
 
         if(!String.valueOf(new_subscription).equals("null")){
             String orderId=null;
