@@ -140,21 +140,25 @@ public class order_detail_frag extends Fragment {
                 ArrayList<JSONObject> orders = new ArrayList<JSONObject>();
                 JSONObject orders_ = new JSONObject();
 
-                HashMap<String, String> op = new HashMap<>();
-                op.put("vendor_phone", "3");
-                op.put("order_Id", orderid_);
+                JSONObject op = new JSONObject();
                 try {
+                    op.put("order_id", orderid_);
+                    op.put("vendor_phone", "1");
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);
                     JSONArray arr5 = object1.getJSONArray("name");
                     JSONArray jsonArray=object1.getJSONArray("quan");
-                    op.put("items", String.valueOf(arr5));
-                    op.put("quantity", String.valueOf(jsonArray));
+                    op.put("items", arr5);
+                    op.put("quantity", jsonArray);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 String outputreq = gson.toJson(op);
+
+                Log.d("response", String.valueOf(op));
+
+
 
                 try {
                     HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_sent).openConnection()));
@@ -166,7 +170,7 @@ public class order_detail_frag extends Fragment {
 
                     OutputStream os = httpcon.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(outputreq);
+                    writer.write(String.valueOf(op));
                     writer.close();
                     os.close();
 
@@ -183,20 +187,24 @@ public class order_detail_frag extends Fragment {
                     Log.d("comingdata", sb.toString());
                     response = sb.toString();
                     pdialog.dismiss();
+                    Toast.makeText(getContext(),"Done", Toast.LENGTH_LONG).show();
+
 
                 } catch (MalformedURLException e) {
                     pdialog.dismiss();
                     e.printStackTrace();
                     Log.d("MalformedURLException", e.getMessage());
+                    Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
                 } catch (ProtocolException e) {
                     pdialog.dismiss();
                     e.printStackTrace();
                     Log.d("ProtocolException", e.getMessage());
+                    Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     pdialog.dismiss();
                     e.printStackTrace();
                     Log.d("IOException", e.getMessage());
-
+                    Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
                 }
 
                 try {
@@ -231,13 +239,20 @@ public class order_detail_frag extends Fragment {
                 pdialog.setCanceledOnTouchOutside(false);
                 pdialog.show();
 
-                JSONArray a = new JSONArray();
-                HashMap<String, String> op = new HashMap<>();
-                op.put("order_Id", orderid_);
-                op.put("vendor_phone", "3");
-                List<String> list = new ArrayList<>();
-                op.put("items", String.valueOf(list));
-                String outputreq = gson.toJson(op);
+                JSONObject op = new JSONObject();
+                try {
+                    op.put("order_id", orderid_);
+                    op.put("vendor_phone", "1");
+                    String str = sharedPref.getString(temp2, null);
+                    JSONObject object1 = new JSONObject(str);
+                    JSONArray arr5 = new JSONArray();
+                    JSONArray jsonArray= new JSONArray();
+                    op.put("items", arr5);
+                    op.put("quantity", jsonArray);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 try {
                     HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_sent).openConnection()));
@@ -249,7 +264,7 @@ public class order_detail_frag extends Fragment {
 
                     OutputStream os = httpcon.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(outputreq);
+                    writer.write(String.valueOf(op));
                     writer.close();
                     os.close();
 
@@ -266,6 +281,7 @@ public class order_detail_frag extends Fragment {
                     Log.d("comingdata", sb.toString());
                     response = sb.toString();
                     pdialog.dismiss();
+                    Toast.makeText(getContext(),"done",Toast.LENGTH_LONG).show();
 
                 } catch (MalformedURLException e) {
                     pdialog.dismiss();
@@ -290,11 +306,11 @@ public class order_detail_frag extends Fragment {
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(i);
                     } else {
-                        Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "not rejected", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "not rejected", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }

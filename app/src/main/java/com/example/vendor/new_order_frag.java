@@ -39,8 +39,6 @@ public class new_order_frag extends Fragment {
     private ArrayList<order_dataholder> listOrders;
     SwipeRefreshLayout pullToRefreshnew;
 
-    String tempjson;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

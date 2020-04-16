@@ -55,7 +55,7 @@ public class new_subs_detail_frag extends Fragment {
 
     public static String json;
 
-    public static String orderid_, StartDate, EndDate, TotalPrice, sub_type;
+    public static String orderid_, StartDate, EndDate, TotalPrice;
 
     public SharedPreferences sharedPref;
     SharedPreferences.Editor edit;
@@ -99,8 +99,6 @@ public class new_subs_detail_frag extends Fragment {
         reject_tv = rootView.findViewById(R.id.reject_tv);
         accept_btn = rootView.findViewById(R.id.accept_btn);
 
-
-        sub_type = new_subscription_adapter.subs_type;
         orderid_ = new_subs_detail.orderId_;
 
         dialog = new ProgressDialog(getContext()); // this = YourActivity
@@ -142,7 +140,7 @@ public class new_subs_detail_frag extends Fragment {
 
                 HashMap<String, String> op = new HashMap<>();
                 op.put("order_Id", orderid_);
-                op.put("vendor_phone", new_subscription_frag.ve);
+                op.put("vendor_phone", "1");
                 try {
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);
@@ -232,13 +230,20 @@ public class new_subs_detail_frag extends Fragment {
                 pdialog.setCanceledOnTouchOutside(false);
                 pdialog.show();
 
-                JSONArray a = new JSONArray();
-                HashMap<String, String> op = new HashMap<>();
-                op.put("order_Id", orderid_);
-                op.put("vendor_phone", new_subscription_frag.ve);
-                List<String> list = new ArrayList<>();
-                op.put("items", String.valueOf(list));
-                String outputreq = gson.toJson(op);
+                JSONObject op = new JSONObject();
+                try {
+                    op.put("order_id", orderid_);
+                    op.put("vendor_phone", "1");
+                    String str = sharedPref.getString(temp2, null);
+                    JSONObject object1 = new JSONObject(str);
+                    JSONArray arr5 = new JSONArray();
+                    JSONArray jsonArray= new JSONArray();
+                    op.put("items", arr5);
+                    op.put("quantity", jsonArray);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 try {
                     HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_sent).openConnection()));
@@ -250,7 +255,7 @@ public class new_subs_detail_frag extends Fragment {
 
                     OutputStream os = httpcon.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(outputreq);
+                    writer.write(String.valueOf(op));
                     writer.close();
                     os.close();
 
@@ -291,11 +296,11 @@ public class new_subs_detail_frag extends Fragment {
                         startActivity(i);
                     }
                     else{
-                        Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"not rejected",Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
-                    Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"not rejected",Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }

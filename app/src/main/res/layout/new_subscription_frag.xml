@@ -8,27 +8,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_new_subscription"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="wrap_content">
         </androidx.recyclerview.widget.RecyclerView>
 
-    <EditText
-        android:id="@+id/vendorphone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="vendor phone"
-        android:textSize="35dp"/>
-
-    <EditText
-        android:id="@+id/orderet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="vendor sorder"
-        android:textSize="35dp"/>
-
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="submit"
-        android:textSize="20dp"/>
 </LinearLayout>

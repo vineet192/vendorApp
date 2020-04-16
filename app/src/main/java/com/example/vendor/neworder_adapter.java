@@ -111,8 +111,6 @@ public class neworder_adapter extends RecyclerView.Adapter<neworder_adapter.new_
         TextView date;
         TextView timer;
         TextView total_price;
-        TextView reject_tv;
-        Button accept_btn;
         LinearLayout view_detail_tv;
 
         public new_order_ViewHolder(@NonNull View itemView) {
@@ -122,8 +120,6 @@ public class neworder_adapter extends RecyclerView.Adapter<neworder_adapter.new_
             time = itemView.findViewById(R.id.time);
             total_price = itemView.findViewById(R.id.total_price);
             timer=itemView.findViewById(R.id.timer);
-//            reject_tv = itemView.findViewById(R.id.reject_tv);
-//            accept_btn = itemView.findViewById(R.id.accept_btn);
             view_detail_tv = itemView.findViewById(R.id.view_detail_tv);
         }
     }

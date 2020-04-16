@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity
 
                         vendorDetails = response.body();
 
-                        String ph="+918859501584";
+                        String ph="+917578968856";
 
                         //Replace this phone number with response.body().getVendor_phone() or a valid phone number.
 
