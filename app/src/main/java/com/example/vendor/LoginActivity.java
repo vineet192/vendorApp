@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        getFCMToken();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -169,7 +168,7 @@ public class LoginActivity extends AppCompatActivity
 
                         vendorDetails = response.body();
 
-                        String ph="+917578968856";
+                        String ph="+918859501584";
 
                         //Replace this phone number with response.body().getVendor_phone() or a valid phone number.
 
@@ -243,8 +242,23 @@ public class LoginActivity extends AppCompatActivity
                             System.out.println("Sign in complete");
                             System.out.println("SMS Code is : " + credential.getSmsCode());
 
-                            String token = getFCMToken();
-                            saveTokenToServer(token,vendorDetails.getVendor_phone());
+                            final String[] token = new String[1];
+                            FirebaseInstanceId.getInstance().getInstanceId()
+                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.d("Task : ", "Hi getInstanceId failed * "+task.getException());
+                                                return;
+                                                //Remember that there is error in generating token if mobile is not connected to internet.
+                                            }
+                                            token[0] = task.getResult().getToken();
+                                            Log.d("tokenSent to server ",""+token[0]);
+                                            Log.d("InstanceId(Token) : ", token[0]);
+                                            saveTokenToServer(token[0],vendorDetails.getVendor_phone());
+                                        }
+                                    });
+
                             //Add details to sharedPreferences.
                             SharedPreferences sharedPref = LoginActivity.this.getSharedPreferences(
                                     getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
@@ -256,7 +270,7 @@ public class LoginActivity extends AppCompatActivity
                             editor.putString(getString(R.string.vendor_image_key), vendorDetails.getImagePath());
                             editor.putString(getString(R.string.vendor_city_key),vendorDetails.getVendor_city());
                             editor.putString(getString(R.string.vendor_address_key),vendorDetails.getVendor_address());
-                            editor.putString("fcm_token",token);
+                            editor.putString("fcm_token", token[0]);
                             editor.putString("vendor_lat",vendorDetails.getVendor_lat());
                             editor.putString("vendor_long",vendorDetails.getVendor_long());
                             Toast.makeText(getApplicationContext(),vendorDetails.getVendor_lat(),Toast.LENGTH_LONG).show();
@@ -300,6 +314,7 @@ public class LoginActivity extends AppCompatActivity
                 Log.d("repons.issuccessfull() ",""+response.isSuccessful());
                 Log.d("response",""+response.body());
                 if(response.isSuccessful()){
+                    Log.d("token ",""+token);
                     Log.d("responseSuccessful",""+response.body());
                     Toast.makeText(LoginActivity.this, "Token Saved Successfully", Toast.LENGTH_SHORT).show();
                 }
@@ -311,24 +326,6 @@ public class LoginActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),"token not saved",Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private String getFCMToken() {
-        final String[] token = new String[1];
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.d("Task : ", "Hi getInstanceId failed * "+task.getException());
-                            return;
-                            //Remember that there is error in generating token if mobile is not connected to internet.
-                        }
-                        token[0] = task.getResult().getToken();
-                        Log.d("InstanceId(Token) : ", token[0]);
-                    }
-                });
-        return token[0];
     }
 
     private void initOtpEdit()
