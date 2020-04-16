@@ -323,12 +323,13 @@ public class order_detail_frag extends Fragment {
                     namearr = object.getJSONArray("total_order");
                     quanarr = object.getJSONArray("quantity");
 
+                    HashMap<String,JSONArray> hashMap=new HashMap<>();
                     JSONObject object2 = new JSONObject();
-                    object2.put("name", namearr);
-                    object2.put("quan", quanarr);
+                    hashMap.put("name", namearr);
+                    hashMap.put("quan", quanarr);
 
                     edit = sharedPref.edit();
-                    edit.putString(temp2, String.valueOf(object2));
+                    edit.putString(temp2, String.valueOf(hashMap));
                     edit.commit();
 
                     String str = sharedPref.getString(temp2, null);

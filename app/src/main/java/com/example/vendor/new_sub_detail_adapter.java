@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -96,62 +97,6 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
 
 
                                 try {
-                                    String jsonGet = new_subs_detail_frag.order_Detail;
-                                    obj = new JSONObject(jsonGet);
-                                    JSONArray a1 = new JSONArray();
-
-                                    arr = obj.getJSONArray("items");
-                                    Log.d("without removing", String.valueOf(arr));
-
-                                    for (int j = 0; j < arr.length(); j++) {
-                                        JSONObject object1 = arr.getJSONObject(j);
-                                        if (object1.get("product_name").equals(holder.product_name.getText())) {
-
-                                            a.put(object1);
-
-                                            edit = sharedPref.edit();
-                                            edit.putString(temp, String.valueOf(a));
-                                            edit.commit();
-                                        } else {
-
-                                            a1.put(object1);
-
-                                        }
-
-                                    }
-                                    obj.put("items", a1);
-                                    String temp2 = "new_orders" + orderid_;
-                                    edit = sharedPref.edit();
-                                    edit.putString(temp2, String.valueOf(obj));
-                                    edit.commit();
-
-                                } catch (JSONException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-
-            }
-        });
-
-        holder.remove_tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Cancel order")
-                        .setMessage("Are you sure you want to cancel this order?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                newsubsdetail_dataholderList.remove(holder.getAdapterPosition());
-                                notifyItemRemoved(holder.getAdapterPosition());
-                                notifyItemRangeChanged(holder.getAdapterPosition(), newsubsdetail_dataholderList.size());
-
-
-                                try {
                                     String jsonGet=sharedPref.getString(temp2,null);
                                     obj = new JSONObject(jsonGet);
 
@@ -161,7 +106,6 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
 
                                     arr = obj.getJSONArray("name");
                                     a1=obj.getJSONArray("quan");
-                                    JSONObject jsonObject1=new JSONObject();
 
                                     for (int j = 0; j < arr.length(); j++) {
                                         if (arr.getString(j).equals(holder.product_name.getText())) {
@@ -170,11 +114,12 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
 
                                             quanarr.put(a1.getString(j));
 
-                                            JSONObject jsonObject=new JSONObject();
+                                            HashMap<String,JSONArray> jsonObject=new HashMap<>();
                                             jsonObject.put("name",namearr);
                                             jsonObject.put("quan",quanarr);
 
                                             edit = sharedPref.edit();
+                                            edit.remove(temp);
                                             edit.putString(temp, String.valueOf(jsonObject));
                                             edit.commit();
 
@@ -186,12 +131,13 @@ public class new_sub_detail_adapter extends RecyclerView.Adapter<new_sub_detail_
                                         }
 
                                     }
+                                    HashMap<String,JSONArray> jsonObject1=new HashMap<>();
                                     jsonObject1.put("name",namearr1);
                                     jsonObject1.put("quan",quanarr1);
-                                    a2.put(jsonObject1);
                                     edit = sharedPref.edit();
+                                    edit.remove(temp2);
                                     edit.putString(temp2, String.valueOf(jsonObject1));
-                                    edit.apply();
+                                    edit.commit();
 
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();

@@ -80,7 +80,7 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
 
         if ((sharedPref.contains(temp2))) {
 
-            removedJson = sharedPref.getString(temp, null);
+            removedJson = sharedPref.getString(temp2, null);
             try {
                 JSONObject object3=new JSONObject(removedJson);
                 namearr1=object3.getJSONArray("name");
@@ -118,20 +118,17 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
                                 notifyItemRemoved(holder.getAdapterPosition());
                                 notifyItemRangeChanged(holder.getAdapterPosition(), sub_Orderdetail_dataholderList.size());
 
-                                JSONArray a4 = new JSONArray();
-                                JSONArray a5 = new JSONArray();
-                                JSONArray array = new JSONArray();
-
 
                                 try {
                                     for (int i = 0; i < namearr.length(); i++) {
                                         if (namearr.getString(i).equals(holder.product_name.getText())) {
                                             namearr1.put(namearr.getString(i));
                                             quanarr1.put(quanarr.getString(i));
-                                            JSONObject object=new JSONObject();
+                                            HashMap<String,JSONArray> object=new HashMap<>();
                                             object.put("name",namearr1);
                                             object.put("quan",quanarr1);
                                             edit = sharedPref.edit();
+                                            edit.remove(temp2);
                                             edit.putString(temp2, String.valueOf(object));
                                             edit.commit();
 
@@ -141,7 +138,7 @@ public class new_sub_removeitem_adapter extends RecyclerView.Adapter<new_sub_rem
                                         }
                                     }
 
-                                    JSONObject jsonObject=new JSONObject();
+                                    HashMap<String,JSONArray> jsonObject=new HashMap<>();
                                     jsonObject.put("name",namearr2);
                                     jsonObject.put("quan",quanarr2);
                                     edit = sharedPref.edit();

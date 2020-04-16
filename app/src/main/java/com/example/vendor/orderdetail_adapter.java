@@ -128,12 +128,13 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
 
                                             quanarr.put(a1.getString(j));
 
-                                            JSONObject jsonObject=new JSONObject();
-                                            jsonObject.put("name",namearr);
-                                            jsonObject.put("quan",quanarr);
+                                            HashMap<String,JSONArray> hashMap=new HashMap<>();
+                                            hashMap.put("name",namearr);
+                                            hashMap.put("quan",quanarr);
 
                                             edit = sharedPref.edit();
-                                            edit.putString(temp, String.valueOf(jsonObject));
+                                            edit.remove(temp);
+                                            edit.putString(temp, String.valueOf(hashMap));
                                             edit.commit();
 
                                         } else {
@@ -144,11 +145,12 @@ public class orderdetail_adapter extends RecyclerView.Adapter<orderdetail_adapte
                                         }
 
                                     }
-                                    jsonObject1.put("name",namearr1);
-                                    jsonObject1.put("quan",quanarr1);
-                                    a2.put(jsonObject1);
+                                    HashMap<String,JSONArray> hash=new HashMap<>();
+                                    hash.put("name",namearr1);
+                                    hash.put("quan",quanarr1);
                                     edit = sharedPref.edit();
-                                    edit.putString(temp2, String.valueOf(jsonObject1));
+                                    edit.remove(temp2);
+                                    edit.putString(temp2, String.valueOf(hash));
                                     edit.apply();
 
                                 } catch (JSONException ex) {

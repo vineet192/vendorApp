@@ -368,7 +368,7 @@ public class new_subs_detail_frag extends Fragment {
                     namearr = object.getJSONArray("total_order");
                     quanarr = object.getJSONArray("quantity");
 
-                    JSONObject object2 = new JSONObject();
+                    HashMap<String,JSONArray> object2 = new HashMap<>();
                     object2.put("name", namearr);
                     object2.put("quan", quanarr);
 

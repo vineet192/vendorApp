@@ -78,7 +78,7 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
 
         if ((sharedPref.contains(temp2))) {
 
-            removedjson = sharedPref.getString(temp, null);
+            removedjson = sharedPref.getString(temp2, null);
             try {
                 JSONObject object3=new JSONObject(removedjson);
                 namearr1=object3.getJSONArray("name");
@@ -125,10 +125,11 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
                                         if (namearr.getString(i).equals(holder.product_name.getText())) {
                                             namearr1.put(namearr.getString(i));
                                             quanarr1.put(quanarr.getString(i));
-                                            JSONObject object=new JSONObject();
+                                            HashMap<String ,JSONArray> object=new HashMap<>();
                                             object.put("name",namearr1);
                                             object.put("quan",quanarr1);
                                             edit = sharedPref.edit();
+                                            edit.remove(temp2);
                                             edit.putString(temp2, String.valueOf(object));
                                             edit.commit();
 
@@ -138,7 +139,7 @@ public class remove_item_adapter extends RecyclerView.Adapter<remove_item_adapte
                                         }
                                     }
 
-                                    JSONObject jsonObject=new JSONObject();
+                                    HashMap<String ,JSONArray> jsonObject=new HashMap<>();
                                     jsonObject.put("name",namearr2);
                                     jsonObject.put("quan",quanarr2);
                                     edit = sharedPref.edit();
