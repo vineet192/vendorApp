@@ -69,7 +69,7 @@ public class new_subs_detail_frag extends Fragment {
 
     ProgressDialog dialog;
 
-    String url_sent = "https://gocoding.azurewebsites.net/vendor/vendorresponse/";
+    String url_sent = "https://gocoding.azurewebsites.net/vendorresponse/";
 
     String temp2,temp;
 
