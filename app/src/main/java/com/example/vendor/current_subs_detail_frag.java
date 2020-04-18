@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -16,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.Models.DeleiveryBoy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -44,10 +48,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class current_subs_detail_frag extends Fragment {
 
-    String orderId_;
-
+    public static String orderId_;
+    public static boolean active = false;
     String deliver_boy_phone;
-
+    ArrayList<DeleiveryBoy> listDeliveryBoy;
     RecyclerView subsItems_recyclerView;
 
     RecyclerView.Adapter adapter=null;
@@ -67,7 +71,7 @@ public class current_subs_detail_frag extends Fragment {
 
     Button process_btn;
 
-    LinearLayout schedule_ly,subscription_ly,remove_ly;
+    LinearLayout schedule_ly,subscription_ly,remove_ly,layoutDeliveryBoyDetails;
     TextView schedule_tv,subscription_tv,orderid,remove_tv;
 
     ProgressDialog dialog;
@@ -86,7 +90,7 @@ public class current_subs_detail_frag extends Fragment {
 
         orderId_= currentsubs_detail.orderId_;
 //        order_Detail= currentsubs_detail.order_Detail;
-
+        layoutDeliveryBoyDetails = rootView.findViewById(R.id.deliveryBoyDetails);
         subsItems_recyclerView= rootView.findViewById(R.id.subsItems_recyclerView);
         move_back_iv= rootView.findViewById(R.id.move_back_iv);
         phonenumber= rootView.findViewById(R.id.phonenumber);
@@ -137,13 +141,14 @@ public class current_subs_detail_frag extends Fragment {
                 startActivity(intent);
             }
         });
-
+        loadData();
+        loadSubscriptionDeliveryData();
         return  rootView;
     }
 
     public void loadData() {
         HashMap<String, String> op = new HashMap<>();
-        op.put("vendor_phone", "3");
+        op.put("vendor_phone", "10");
         String outputreq = gson.toJson(op);
 
         Log.d("input", outputreq);
@@ -251,5 +256,66 @@ public class current_subs_detail_frag extends Fragment {
         }
 
     }
+
+//    public void  loadDeliveryBoyDetailsData(){
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for deliveryBoyDetails", getActivity().MODE_PRIVATE);
+//        Gson gson = new Gson();
+//        Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
+//        String json = sharedPreferences.getString("listSubscribedDeliveryBoy", null);
+//        listDeliveryBoy = gson.fromJson(json, type);
+//        if (listDeliveryBoy == null) {
+//            listDeliveryBoy = new ArrayList<>();
+//        }
+//
+//        for(int i=0;i<listDeliveryBoy.size();i++){
+//            DeleiveryBoy currentBoy = listDeliveryBoy.get(i);
+//            if(currentBoy.getOrder_id().equals(orderId_)){
+//                layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
+//                deliveryboy_name.setText(currentBoy.getDel_boy_name());
+//                deliveryboy_vehicle.setText(currentBoy.getDel_boy_phone());
+//                deliveryyboyimage.setImageURI(Uri.parse(currentBoy.getPhotoUrl()));
+//                if(currentBoy.getArrived())
+//                    deliveryboy_arivingstatus.setVisibility(View.VISIBLE);
+//            }
+//        }
+//    }
+
+    public void  loadSubscriptionDeliveryData(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for deliveryBoyDetailsSubscription", getActivity().MODE_PRIVATE);
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
+        String json = sharedPreferences.getString("list", null);
+        listDeliveryBoy = gson.fromJson(json, type);
+        if (listDeliveryBoy == null) {
+            listDeliveryBoy = new ArrayList<>();
+        }
+
+        for(int i=0;i<listDeliveryBoy.size();i++){
+            DeleiveryBoy currentBoy = listDeliveryBoy.get(i);
+            if(currentBoy.getOrder_id().equals(orderId_)){
+                layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
+                deliveryboy_name.setText(currentBoy.getDel_boy_name());
+                deliveryboy_vehicle.setText(currentBoy.getDel_boy_phone());
+                deliveryyboyimage.setImageURI(Uri.parse(currentBoy.getPhotoUrl()));
+                if(currentBoy.getArrived())
+                    deliveryboy_arivingstatus.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("HI","start");
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("HI","stop");
+        active = false;
+    }
+
 
 }

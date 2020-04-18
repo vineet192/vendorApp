@@ -38,7 +38,7 @@ public class new_subscription_frag extends Fragment {
     RecyclerView.Adapter adapter = null;
     private ArrayList<subscription_dataholder> listOrders;
     List<subscription_dataholder> list = new ArrayList<>();
-
+    public static boolean active = false;
 
     ArrayList<String> orderID = new ArrayList<>();
     ArrayList<String> startdate = new ArrayList<>();
@@ -133,6 +133,20 @@ public class new_subscription_frag extends Fragment {
         if (listOrders == null) {
             listOrders = new ArrayList<>();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("HI","start");
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("HI","stop");
+        active = false;
     }
 
 }

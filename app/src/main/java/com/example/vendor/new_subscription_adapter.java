@@ -73,12 +73,12 @@ public class new_subscription_adapter extends RecyclerView.Adapter<new_subscript
 
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
 
-                holder.timer.setText( minutes + " M: " + seconds + " S  ");
+//                holder.timer.setText( minutes + " M: " + seconds + " S  ");
             }
 
             @Override
             public void onFinish() {
-                holder.timer.setText("Finish!");
+//                holder.timer.setText("Finish!");
             }
         };
         cdt.start();

@@ -8,6 +8,34 @@ public class DeleiveryBoy implements Serializable {
     private String vendor_phone;
     private String del_boy_name;
     private String del_boy_phone;
+    String order_type;
+    String PhotoUrl;
+
+    public Boolean getArrived() {
+        return isArrived;
+    }
+
+    public void setArrived(Boolean arrived) {
+        isArrived = arrived;
+    }
+
+    Boolean isArrived;
+
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
+    }
+
+    public String getPhotoUrl() {
+        return PhotoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        PhotoUrl = photoUrl;
+    }
 
     public String getOrder_id() {
         return order_id;

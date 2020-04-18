@@ -38,6 +38,7 @@ public class new_order_frag extends Fragment {
     RecyclerView.Adapter adapter=null;
     private ArrayList<order_dataholder> listOrders;
     SwipeRefreshLayout pullToRefreshnew;
+    public static boolean active = false;
 
     @Nullable
     @Override
@@ -66,6 +67,20 @@ public class new_order_frag extends Fragment {
         if (listOrders == null) {
             listOrders = new ArrayList<>();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("HI","start");
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("HI","stop");
+        active = false;
     }
 
 }

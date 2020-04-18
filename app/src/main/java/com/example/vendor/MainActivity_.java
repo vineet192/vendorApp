@@ -14,20 +14,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.Fragments.InventoryFragment;
+import com.example.Models.DeleiveryBoy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class MainActivity_ extends AppCompatActivity
 {
     FrameLayout fullpagefragcontainer;
     BottomNavigationView bottom_navigation;
     SharedPreferences sharedPref;
+    ArrayList<DeleiveryBoy> listDeliveryBoyNormalOrder;
 
     ProgressDialog dialog;
-
+    ArrayList<DeleiveryBoy> listK = new ArrayList<>();
     public static String check="false";
 
     @Override
@@ -85,9 +92,24 @@ public class MainActivity_ extends AppCompatActivity
                 return false;
             }
         });
-
+        loadNormalDeliveryData();
+        DeleiveryBoy del = new DeleiveryBoy();
+        del.setDel_boy_name("hi");
+        del.setDel_boy_phone("12345678");
+        listK.add(del);
     }
 
+    public void  loadNormalDeliveryData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyDetailsOrder", MODE_PRIVATE);
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
+        String json = sharedPreferences.getString("list", String.valueOf(listK));
+        listDeliveryBoyNormalOrder = gson.fromJson(json, type);
+        if (listDeliveryBoyNormalOrder == null) {
+            listDeliveryBoyNormalOrder = new ArrayList<>();
+        }
+        Log.d("*loadNormalDeliveryData",""+listDeliveryBoyNormalOrder.toString()+" * ");
+    }
 }
 
 

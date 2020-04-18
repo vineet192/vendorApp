@@ -3,11 +3,35 @@ package com.example.vendor;
 import org.json.JSONArray;
 
 public class subscription_dataholder {
+    public String getDays() {
+        return days;
+    }
 
+    public void setDays(String days) {
+        this.days = days;
+    }
 
-    String orderID,startdate,enddate,total_price,timer,deliveryboy_arivingtime,
-            deliveryboy_phone,deliveryboy_otp,product_name,product_price,
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    String orderID,startdate,enddate,days,deliveryboy_arivingtime,time
+            ,total_price,timer,deliveryboy_phone,deliveryboy_otp,product_name,product_price,
             prod_quantity,prod_total_price,package_status,subscription_type;
+
+    int duration;
 
     public String getTimer() {
         return timer;

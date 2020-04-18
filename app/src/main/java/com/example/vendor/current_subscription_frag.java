@@ -115,7 +115,7 @@ public class current_subscription_frag extends Fragment {
 
     public void loadData() {
         HashMap<String, String> op = new HashMap<>();
-        op.put("vendor_phone", "3");
+        op.put("vendor_phone", "10");
         String outputreq = gson.toJson(op);
 
         Log.d("input", outputreq);
@@ -162,25 +162,22 @@ public class current_subscription_frag extends Fragment {
             dialog.dismiss();
             e.printStackTrace();
             Log.d("IOException", e.getMessage());
-
         }
     }
 
     private void loadrecycler() {
-
         String jsonGet=order_Detail;
-
         try {
             JSONObject object=new JSONObject(jsonGet);
             JSONArray array= object.getJSONArray("mysorders");
 
             for (int i = 0; i < array.length(); i++) {
 
-                HashMap<String, String> hashmap = sharedList.get(i);
+                JSONObject object1 = array.getJSONObject(i);
 
-                orderID.add(hashmap.get("sorder_id"));
+                orderID.add(object1.getString("sorder_id"));
                 enddate.add(("enddate"));
-                startdate.add(hashmap.get("date"));
+                startdate.add(object1.getString("date"));
                 total_price.add(("total_price"));
                 deliveryboy_arivingtime.add(("waiting"));
                 deliveryboy_otp.add(("waiting"));

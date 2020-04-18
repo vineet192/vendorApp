@@ -55,7 +55,6 @@ public class currentsubs_detail extends AppCompatActivity {
 
         toolbar= findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         orderid= findViewById(R.id.orderid);
 
 
