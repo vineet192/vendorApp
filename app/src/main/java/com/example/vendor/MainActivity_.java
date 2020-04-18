@@ -100,7 +100,7 @@ public class MainActivity_ extends AppCompatActivity
     }
 
     public void  loadNormalDeliveryData(){
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyDetailsOrder", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("shared preferences for deliveryBoyDetailsOrder", getApplicationContext().MODE_PRIVATE);
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
         String json = sharedPreferences.getString("list", String.valueOf(listK));

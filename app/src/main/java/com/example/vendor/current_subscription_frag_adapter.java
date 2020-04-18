@@ -2,6 +2,7 @@ package com.example.vendor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,8 @@ public class current_subscription_frag_adapter extends RecyclerView.Adapter<curr
                 Intent i=new Intent(context, currentsubs_detail.class);
                 i.putExtra("orderId",holder.orderID.getText().toString());
                 i.putExtra("orderDetail", current_subscription_frag.order_Detail);
+                Log.d("orderIDAdapter",""+holder.orderID.getText().toString());
+                Log.d("order_DetailAdapter",""+current_subscription_frag.order_Detail);
                 context.startActivity(i);
 
             }

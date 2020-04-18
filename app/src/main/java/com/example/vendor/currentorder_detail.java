@@ -143,8 +143,6 @@ public class currentorder_detail extends AppCompatActivity {
             }
         });
         loadNormalDeliveryData();
-        NotificationsMessagingService nm = new NotificationsMessagingService();
-        nm.loadNormalDeliveryData(currentorder_detail.this);
     }
 
     private void saveOrderID(String orderId_) {

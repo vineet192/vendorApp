@@ -308,13 +308,13 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if(orderType.equals("normal")){
+            if(orderType.equals("N") || orderType.equals("O")){
                 loadNormalDeliveryData(this);
                 listDeliveryBoyNormalOrder.add(details);
                 saveNormalDeliveryData(listDeliveryBoyNormalOrder);
                 if (currentorder_detail.active == true && currentorder_detail.orderId_.equals(orderId))
                     startActivity(new Intent(this,currentorder_detail.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            }else {
+            }else if(orderType.equals("S")){
                 loadSubscriptionDeliveryData();
                 listDeliveryBoySubscriptionOrder.add(details);
                 saveSubscriptionDeliveryData(listDeliveryBoySubscriptionOrder);
@@ -346,7 +346,7 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if(orderType.equals("normal")){
+            if(orderType.equals("N") || orderType.equals("O")){
                 loadNormalDeliveryData(this);
                 for(int i=0;i<listDeliveryBoyNormalOrder.size();i++) {
                     DeleiveryBoy currentDelBoy = listDeliveryBoyNormalOrder.get(i);
@@ -358,7 +358,7 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 }
                 if (currentorder_detail.active == true && currentorder_detail.orderId_.equals(orderId))
                     startActivity(new Intent(this,currentorder_detail.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            }else {
+            }else if(orderType.equals("S")){
                 loadSubscriptionDeliveryData();
                 for(int i=0;i<listDeliveryBoySubscriptionOrder.size();i++) {
                     DeleiveryBoy currentDelBoy = listDeliveryBoySubscriptionOrder.get(i);

@@ -167,6 +167,7 @@ public class current_subscription_frag extends Fragment {
 
     private void loadrecycler() {
         String jsonGet=order_Detail;
+        Log.d("DatafromServer",""+order_Detail);
         try {
             JSONObject object=new JSONObject(jsonGet);
             JSONArray array= object.getJSONArray("mysorders");

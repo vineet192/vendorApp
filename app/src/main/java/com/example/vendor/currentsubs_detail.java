@@ -3,6 +3,7 @@ package com.example.vendor;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,11 +58,11 @@ public class currentsubs_detail extends AppCompatActivity {
         setSupportActionBar(toolbar);
         orderid= findViewById(R.id.orderid);
 
-
-        Intent intent=getIntent();
-        orderId_=intent.getStringExtra("OrderId");
+        Intent intent = getIntent();
+        orderId_=intent.getStringExtra("orderId");
         order_Detail=intent.getStringExtra("orderDetail");
-
+        Log.d("orderIDCurrentSub",""+orderId_);
+        Log.d("order_DetailCurrentSub",""+order_Detail);
         orderid.setText(orderId_);
 
 //        schedule_ly= findViewById(R.id.schedule_ly);
@@ -77,8 +78,6 @@ public class currentsubs_detail extends AppCompatActivity {
 //
 //        subscription_ly.setBackgroundResource(R.drawable.click_shape);
 //        schedule_ly.setBackgroundResource(R.drawable.shape);
-
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frag, new current_subs_detail_frag()).commit();
         }
@@ -182,7 +181,5 @@ public class currentsubs_detail extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 //        }
-
-
     }
 }

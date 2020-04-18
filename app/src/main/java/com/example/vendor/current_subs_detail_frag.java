@@ -66,7 +66,7 @@ public class current_subs_detail_frag extends Fragment {
 
     ImageView move_back_iv,phonenumber,navigation,deliveryyboyimage;
 
-    TextView orderId,packing_status,startdate,enddate,deliverycharge,tax,totalcost,deliveryboy_name,deliveryboy_arivingstatus
+    TextView packing_status,startdate,enddate,deliverycharge,tax,totalcost,deliveryboy_name,deliveryboy_arivingstatus
             ,deliveryboy_vehicle,deliveryboy_otp;
 
     Button process_btn;
@@ -89,17 +89,17 @@ public class current_subs_detail_frag extends Fragment {
 
 
         orderId_= currentsubs_detail.orderId_;
-//        order_Detail= currentsubs_detail.order_Detail;
+        order_Detail= currentsubs_detail.order_Detail;
+        Log.d("orderID",""+orderId_);
+        Log.d("order_Detail",""+order_Detail);
         layoutDeliveryBoyDetails = rootView.findViewById(R.id.deliveryBoyDetails);
         subsItems_recyclerView= rootView.findViewById(R.id.subsItems_recyclerView);
         move_back_iv= rootView.findViewById(R.id.move_back_iv);
         phonenumber= rootView.findViewById(R.id.phonenumber);
         navigation= rootView.findViewById(R.id.navigation);
         deliveryyboyimage= rootView.findViewById(R.id.deliveryyboyimage);
-        orderId= rootView.findViewById(R.id.orderId);
         startdate= rootView.findViewById(R.id.startdate);
         enddate= rootView.findViewById(R.id.enddate);
-        packing_status= rootView.findViewById(R.id.packing_status);
         deliverycharge= rootView.findViewById(R.id.deliverycharge);
         tax= rootView.findViewById(R.id.tax);
         deliveryboy_name= rootView.findViewById(R.id.deliveryboy_name);
@@ -214,10 +214,9 @@ public class current_subs_detail_frag extends Fragment {
                     JSONObject object=arr.getJSONObject(i);
                     if(object.getString("sorder_id").equals(orderId_))
                     {
-                        orderId.setText(object.getString("sorder_id"));
                         startdate.setText(object.getString("date"));
                         enddate.setText(("enddate"));
-                        packing_status.setText(("packing_status"));
+                        //packing_status.setText(("packing_status"));
                         deliveryboy_arivingstatus.setText(("waiting"));
                         deliveryboy_vehicle.setText(("waiting"));
                         deliveryboy_otp.setText(("waiting"));
@@ -286,6 +285,8 @@ public class current_subs_detail_frag extends Fragment {
         Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
         String json = sharedPreferences.getString("list", null);
         listDeliveryBoy = gson.fromJson(json, type);
+        Log.d("jsonSubscription",json);
+        Log.d("listSubscription",listDeliveryBoy.toString());
         if (listDeliveryBoy == null) {
             listDeliveryBoy = new ArrayList<>();
         }
