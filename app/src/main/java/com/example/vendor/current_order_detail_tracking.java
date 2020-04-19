@@ -49,7 +49,7 @@ public class current_order_detail_tracking extends AppCompatActivity implements 
     private static final String coarse_location = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int location_permission_request_code = 1234;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    public static final int DEFAULT_ZOOM = 5;
+    public static final int DEFAULT_ZOOM = 15;
     private static final String KEY_VENDOR_LAT = "vendor_lat";
     private static final String KEY_VENDOR_LONG = "vendor_long";
 
@@ -67,6 +67,7 @@ public class current_order_detail_tracking extends AppCompatActivity implements 
     String vendorLong;
 
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
+    List<com.google.maps.model.LatLng> decodedPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,10 @@ public class current_order_detail_tracking extends AppCompatActivity implements 
 
         LatLng destination = new LatLng(Double.parseDouble(vendorLat), Double.parseDouble(vendorLong));
         calculateDirections(destination);
+
+        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
 
         mMap.setOnPolylineClickListener(this);
 
@@ -174,11 +179,6 @@ public class current_order_detail_tracking extends AppCompatActivity implements 
 
         currentLocation = location;
         Log.d("onLocationChanged", "onLocationChanged: " + currentLocation.getLatitude());
-        LatLng latLng = new LatLng(25.124578, 87.235689);
-        /*mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));*/
-        /*CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM);
-        mMap.animateCamera(cameraUpdate);*/
 
     }
 
@@ -232,10 +232,19 @@ public class current_order_detail_tracking extends AppCompatActivity implements 
             public void run() {
                 Log.d(TAG, "run: result routes: " + result.routes.length);
 
+                if (polylineData.size() > 0) {
+                    for (PolylineData mPolylineData : polylineData) {
+                        mPolylineData.getPolyline().remove();
+                    }
+                    polylineData.clear();
+                    polylineData = new ArrayList<>();
+                }
+                double duration = 999999999;
+
 
                 for (DirectionsRoute route : result.routes) {
                     Log.d(TAG, "run: leg: " + route.legs[0].toString());
-                    List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
+                     decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
 
                     List<LatLng> newDecodedPath = new ArrayList<>();
 
@@ -253,6 +262,12 @@ public class current_order_detail_tracking extends AppCompatActivity implements 
                     polyline.setColor(ContextCompat.getColor(current_order_detail_tracking.this, R.color.darkGrey));
                     polyline.setClickable(true);
                     polylineData.add(new PolylineData(polyline, route.legs[0]));
+
+                    double tempDuration = route.legs[0].duration.inSeconds;
+                    if (tempDuration < duration) {
+                        duration = tempDuration;
+                        onPolylineClick(polyline);
+                    }
 
                 }
             }
