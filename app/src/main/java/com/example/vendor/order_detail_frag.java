@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.Models.DeleiveryBoy;
 import com.example.Models.order_dataholder;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -47,7 +50,7 @@ public class order_detail_frag extends Fragment {
 
     RecyclerView order_detail_recycler;
     RecyclerView.Adapter adapter = null;
-
+    ArrayList<order_dataholder> listOrders;
     ArrayList<String> productnamelist = new ArrayList<>();
     ArrayList<String> productquanlist = new ArrayList<>();
     private List<neworders_model> list = new ArrayList<>();
@@ -127,7 +130,6 @@ public class order_detail_frag extends Fragment {
         accept_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 ProgressDialog pdialog;
                 pdialog = new ProgressDialog(getContext()); // this = YourActivity
                 pdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -136,10 +138,8 @@ public class order_detail_frag extends Fragment {
                 pdialog.setIndeterminate(true);
                 pdialog.setCanceledOnTouchOutside(false);
                 pdialog.show();
-
                 ArrayList<JSONObject> orders = new ArrayList<JSONObject>();
                 JSONObject orders_ = new JSONObject();
-
                 JSONObject op = new JSONObject();
                 try {
                     op.put("order_id", orderid_);
@@ -155,11 +155,7 @@ public class order_detail_frag extends Fragment {
                     e.printStackTrace();
                 }
                 String outputreq = gson.toJson(op);
-
                 Log.d("response", String.valueOf(op));
-
-
-
                 try {
                     HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_sent).openConnection()));
                     httpcon.setDoOutput(true);
@@ -206,7 +202,6 @@ public class order_detail_frag extends Fragment {
                     Log.d("IOException", e.getMessage());
                     Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
                 }
-
                 try {
                     JSONObject o9 = new JSONObject(response);
                     String check = o9.getString("success");
@@ -222,6 +217,10 @@ public class order_detail_frag extends Fragment {
                     Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
+
+                loadNewOrderData();
+                DeleteFomList(orderid_);
+                saveNewOrderData(listOrders);
 
             }
         });
@@ -313,11 +312,45 @@ public class order_detail_frag extends Fragment {
                     Toast.makeText(getContext(), "not rejected", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
+
+                loadNewOrderData();
+                DeleteFomList(orderid_);
+                saveNewOrderData(listOrders);
             }
         });
 
         return rootView;
 
+    }
+
+    public void saveNewOrderData(ArrayList<order_dataholder> list) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for newOrder", getActivity().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString("list", json);
+        editor.apply();
+        Log.d("listSaved",""+list.toString());
+    }
+
+    public void  loadNewOrderData(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for newOrder", getActivity().MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<ArrayList<order_dataholder>>() {}.getType();
+        listOrders = gson.fromJson(json, type);
+
+        if (listOrders == null) {
+            listOrders = new ArrayList<>();
+        }
+    }
+
+    public void DeleteFomList(String OrderID){
+        for(int i=0;i<listOrders.size();i++){
+            order_dataholder delBoy = listOrders.get(i);
+            if(delBoy.getOrderID().equals(OrderID))
+                listOrders.remove(i);
+        }
     }
 
     public void loadrecycler() {

@@ -15,7 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.Models.DeleiveryBoy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -45,7 +48,7 @@ public class new_subs_detail_frag extends Fragment {
 
     RecyclerView new_subs_detail_recycler;
     RecyclerView.Adapter adapter = null;
-
+    ArrayList<subscription_dataholder> listSubscription;
     ArrayList<String> productnamelist = new ArrayList<>();
     ArrayList<String> productquanlist = new ArrayList<>();
     private List<neworders_model> list = new ArrayList<>();
@@ -212,6 +215,9 @@ public class new_subs_detail_frag extends Fragment {
                     Toast.makeText(getContext(),"not accepted",Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
+                loadNewSubscriptionData();
+                DeleteFomList(orderid_);
+                saveNewSubscriptionData(listSubscription);
 
             }
         });
@@ -303,11 +309,45 @@ public class new_subs_detail_frag extends Fragment {
                     Toast.makeText(getContext(),"not rejected",Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
+
+                loadNewSubscriptionData();
+                DeleteFomList(orderid_);
+                saveNewSubscriptionData(listSubscription);
             }
         });
 
         return rootView;
 
+    }
+
+    public void saveNewSubscriptionData(ArrayList<subscription_dataholder> listSubscription) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for newSubscription", getActivity().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listSubscription);
+        editor.putString("list", json);
+        editor.apply();
+        Log.d("saveNewSubDataDetails",""+listSubscription.toString());
+    }
+
+    public void  loadNewSubscriptionData(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for newSubscription", getActivity().MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<ArrayList<subscription_dataholder>>() {}.getType();
+        listSubscription = gson.fromJson(json, type);
+
+        if (listSubscription == null) {
+            listSubscription = new ArrayList<>();
+        }
+    }
+
+    public void DeleteFomList(String OrderID){
+        for(int i=0;i<listSubscription.size();i++){
+            subscription_dataholder delBoy = listSubscription.get(i);
+            if(delBoy.getOrderID().equals(OrderID))
+                listSubscription.remove(i);
+        }
     }
 
     public void loadrecycler() {

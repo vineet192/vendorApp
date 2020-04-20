@@ -65,6 +65,13 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        String Str1 = "bhavesh";
+        String Str2 = "china";
+        Log.d("Str1Check ",Str1);
+        Log.d("Str2Check ",Str2);
+        Str1 = Str2;
+        Log.d("Str1Check ",Str1);
+        Log.d("Str2Check ",Str2);
         loginButton = (Button) findViewById(R.id.welcome_login_button);
         vendorID = (EditText) findViewById(R.id.vendor_id);
         otpVerify = (Button) findViewById(R.id.verify_and_proceed_button);
@@ -168,7 +175,7 @@ public class LoginActivity extends AppCompatActivity
 
                         vendorDetails = response.body();
 
-                        String ph="+917578968856";
+                        String ph="+919145882409";
 
                         //Replace this phone number with response.body().getVendor_phone() or a valid phone number.
 

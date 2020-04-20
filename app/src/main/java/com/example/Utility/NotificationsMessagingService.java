@@ -21,6 +21,7 @@ import com.example.vendor.R;
 import com.example.Models.order_dataholder;
 import com.example.vendor.current_subs_detail_frag;
 import com.example.vendor.currentorder_detail;
+import com.example.vendor.currentsubs_detail;
 import com.example.vendor.new_order_frag;
 import com.example.vendor.new_subscription_frag;
 import com.example.vendor.subscription_dataholder;
@@ -318,8 +319,11 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 loadSubscriptionDeliveryData();
                 listDeliveryBoySubscriptionOrder.add(details);
                 saveSubscriptionDeliveryData(listDeliveryBoySubscriptionOrder);
-                if (current_subs_detail_frag.active == true && current_subs_detail_frag.orderId_.equals(orderId))
-                    startActivity(new Intent(this,current_subs_detail_frag.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                if (current_subs_detail_frag.active == true && current_subs_detail_frag.orderId_.equals(orderId)){
+                    Intent intent = new Intent(this, currentsubs_detail.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("checkForLaunch","yes");
+                    startActivity(intent);
+                }
             }
             title = "Delivery boy has been assigned";
             message = "For OrderID : "+orderId;
@@ -337,20 +341,22 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 e.printStackTrace();
             }
             try {
-                phoneNo = ""+delivery_boy_reached.get("order_type");
+                orderType = ""+delivery_boy_reached.get("order_type");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
-                orderType = ""+delivery_boy_reached.get("phoneNo");
+                phoneNo = ""+delivery_boy_reached.get("phoneNo");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             if(orderType.equals("N") || orderType.equals("O")){
+                Log.d(TAG,"enteredIF");
                 loadNormalDeliveryData(this);
                 for(int i=0;i<listDeliveryBoyNormalOrder.size();i++) {
                     DeleiveryBoy currentDelBoy = listDeliveryBoyNormalOrder.get(i);
                     if(currentDelBoy.getOrder_id().equals(orderId) && currentDelBoy.getDel_boy_phone().equals(phoneNo)) {
+                        Log.d(TAG+"Arr",currentDelBoy.getOrder_id()+currentDelBoy.getDel_boy_phone());
                         currentDelBoy.setArrived(true);
                         saveNormalDeliveryData(listDeliveryBoyNormalOrder);
                         break;
@@ -358,7 +364,8 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                 }
                 if (currentorder_detail.active == true && currentorder_detail.orderId_.equals(orderId))
                     startActivity(new Intent(this,currentorder_detail.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            }else if(orderType.equals("S")){
+            }
+            else if(orderType.equals("S")){
                 loadSubscriptionDeliveryData();
                 for(int i=0;i<listDeliveryBoySubscriptionOrder.size();i++) {
                     DeleiveryBoy currentDelBoy = listDeliveryBoySubscriptionOrder.get(i);
@@ -368,8 +375,11 @@ public class NotificationsMessagingService extends FirebaseMessagingService {
                         break;
                     }
                 }
-                if (current_subs_detail_frag.active == true && current_subs_detail_frag.orderId_.equals(orderId))
-                    startActivity(new Intent(this,current_subs_detail_frag.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                if (current_subs_detail_frag.active == true && current_subs_detail_frag.orderId_.equals(orderId)){
+                    Intent intent = new Intent(this, currentsubs_detail.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("checkForLaunch","yes");
+                    startActivity(intent);
+                }
             }
             title = "Delivery boy has arrived";
             message = "For OrderId : "+orderId;

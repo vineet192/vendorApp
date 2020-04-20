@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.Models.DeleiveryBoy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,6 +93,12 @@ public class current_subs_detail_frag extends Fragment {
         order_Detail= currentsubs_detail.order_Detail;
         Log.d("orderID",""+orderId_);
         Log.d("order_Detail",""+order_Detail);
+        if(orderId_!=null && order_Detail!=null)
+            saveOrderIdData(orderId_,order_Detail);
+        else if(orderId_==null && order_Detail==null)
+            loadOrderIdData();
+        Log.d("orderID",""+orderId_);
+        Log.d("order_Detail",""+order_Detail);
         layoutDeliveryBoyDetails = rootView.findViewById(R.id.deliveryBoyDetails);
         subsItems_recyclerView= rootView.findViewById(R.id.subsItems_recyclerView);
         move_back_iv= rootView.findViewById(R.id.move_back_iv);
@@ -105,8 +112,6 @@ public class current_subs_detail_frag extends Fragment {
         deliveryboy_name= rootView.findViewById(R.id.deliveryboy_name);
         totalcost= rootView.findViewById(R.id.totalcost);
         deliveryboy_arivingstatus= rootView.findViewById(R.id.deliveryboy_arivingstatus);
-        deliveryboy_vehicle= rootView.findViewById(R.id.deliveryboy_vehicle);
-        deliveryboy_otp= rootView.findViewById(R.id.deliveryboy_otp);
         process_btn= rootView.findViewById(R.id.process_btn);
 
         subsItems_recyclerView.setHasFixedSize(true);
@@ -217,14 +222,9 @@ public class current_subs_detail_frag extends Fragment {
                         startdate.setText(object.getString("date"));
                         enddate.setText(("enddate"));
                         //packing_status.setText(("packing_status"));
-                        deliveryboy_arivingstatus.setText(("waiting"));
-                        deliveryboy_vehicle.setText(("waiting"));
-                        deliveryboy_otp.setText(("waiting"));
-                        totalcost.setText(("total_price"));
+                        totalcost.setText(("500"));
                         tax.setText(("tax"));
                         deliverycharge.setText(("delivery_charge"));
-                        deliveryboy_name.setText(("waiting"));
-                        deliver_boy_phone=object.getString("delivery_boy_phone");
 
                         //set image
 
@@ -256,36 +256,13 @@ public class current_subs_detail_frag extends Fragment {
 
     }
 
-//    public void  loadDeliveryBoyDetailsData(){
-//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for deliveryBoyDetails", getActivity().MODE_PRIVATE);
-//        Gson gson = new Gson();
-//        Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
-//        String json = sharedPreferences.getString("listSubscribedDeliveryBoy", null);
-//        listDeliveryBoy = gson.fromJson(json, type);
-//        if (listDeliveryBoy == null) {
-//            listDeliveryBoy = new ArrayList<>();
-//        }
-//
-//        for(int i=0;i<listDeliveryBoy.size();i++){
-//            DeleiveryBoy currentBoy = listDeliveryBoy.get(i);
-//            if(currentBoy.getOrder_id().equals(orderId_)){
-//                layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
-//                deliveryboy_name.setText(currentBoy.getDel_boy_name());
-//                deliveryboy_vehicle.setText(currentBoy.getDel_boy_phone());
-//                deliveryyboyimage.setImageURI(Uri.parse(currentBoy.getPhotoUrl()));
-//                if(currentBoy.getArrived())
-//                    deliveryboy_arivingstatus.setVisibility(View.VISIBLE);
-//            }
-//        }
-//    }
-
     public void  loadSubscriptionDeliveryData(){
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for deliveryBoyDetailsSubscription", getActivity().MODE_PRIVATE);
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
         String json = sharedPreferences.getString("list", null);
         listDeliveryBoy = gson.fromJson(json, type);
-        Log.d("jsonSubscription",json);
+        Log.d("jsonSubscription",""+json);
         Log.d("listSubscription",listDeliveryBoy.toString());
         if (listDeliveryBoy == null) {
             listDeliveryBoy = new ArrayList<>();
@@ -295,9 +272,10 @@ public class current_subs_detail_frag extends Fragment {
             DeleiveryBoy currentBoy = listDeliveryBoy.get(i);
             if(currentBoy.getOrder_id().equals(orderId_)){
                 layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
-                deliveryboy_name.setText(currentBoy.getDel_boy_name());
-                deliveryboy_vehicle.setText(currentBoy.getDel_boy_phone());
-                deliveryyboyimage.setImageURI(Uri.parse(currentBoy.getPhotoUrl()));
+                deliveryboy_name.setText(currentBoy.getDel_boy_name()+"\n"+currentBoy.getDel_boy_phone());
+                Picasso.get().load(Uri.parse(currentBoy.getPhotoUrl())).placeholder(R.mipmap.ic_launcher).into(deliveryyboyimage);
+                Log.d("DataFromCurrentBoySubs",currentBoy.getDel_boy_name()+currentBoy.getDel_boy_phone()+"*"+currentBoy.getPhotoUrl());
+                Log.d("BoyArrivedSubs",""+currentBoy.getArrived());
                 if(currentBoy.getArrived())
                     deliveryboy_arivingstatus.setVisibility(View.VISIBLE);
             }
@@ -316,6 +294,22 @@ public class current_subs_detail_frag extends Fragment {
         super.onStop();
         Log.d("HI","stop");
         active = false;
+    }
+
+    public void saveOrderIdData(String orderId, String order_Detail){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared_for_orderId_subFrag",getActivity().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("orderId",orderId);
+        editor.putString("orderDetails",order_Detail);
+        editor.apply();
+    }
+
+    private void loadOrderIdData(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared_for_orderId_subFrag",getActivity().MODE_PRIVATE);
+        String orderID = sharedPreferences.getString("orderId",null);
+        String orderDetails = sharedPreferences.getString("orderDetails",null);
+        orderId_=orderID;
+        order_Detail=orderDetails;
     }
 
 

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -73,7 +82,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="300dp"
             android:id="@+id/subsItems_recyclerView"
             android:layout_margin="10dp">
 
@@ -182,7 +191,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -238,7 +248,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:background="#E6DFDF">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -249,7 +260,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="100dp"
                         android:orientation="horizontal"
                         android:padding="10dp"
                         android:weightSum="10">
@@ -268,73 +279,26 @@
                             android:orientation="vertical"
                             android:weightSum="2">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:orientation="horizontal"
-                                android:weightSum="4">
-
                                 <TextView
                                     android:id="@+id/deliveryboy_name"
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="2"
+                                    android:layout_weight="1"
                                     android:gravity="center|top"
-                                    android:text=" On the way"
+                                    android:text="Name"
                                     android:textColor="#000000"
                                     android:textSize="15dp" />
 
                                 <TextView
                                     android:id="@+id/deliveryboy_arivingstatus"
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="2"
+                                    android:layout_weight="1"
                                     android:gravity="center|top"
                                     android:text="Arrived"
                                     android:visibility="gone"
                                     android:textColor="#0000ff"
                                     android:textSize="15dp" />
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:orientation="horizontal"
-                                android:weightSum="10">
-
-                                <TextView
-                                    android:id="@+id/deliveryboy_vehicle"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="5"
-                                    android:gravity="center"
-                                    android:textColor="#000000"
-                                    android:textSize="13dp" />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="3"
-                                    android:gravity="right"
-                                    android:text="Otp :"
-                                    android:textColor="#000000"
-                                    android:textSize="13dp" />
-
-                                <TextView
-                                    android:id="@+id/deliveryboy_otp"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="2"
-                                    android:text="9415"
-                                    android:textColor="#000000"
-                                    android:textSize="13dp" />
-
-
-                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -387,3 +351,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>
