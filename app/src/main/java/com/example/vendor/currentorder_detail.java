@@ -14,11 +14,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.Constants.ApiInterface;
 import com.example.Models.DeleiveryBoy;
+import com.example.Models.ItemSavingResponse;
 import com.example.Models.order_dataholder;
-import com.example.Utility.NotificationsMessagingService;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -44,6 +47,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class currentorder_detail extends AppCompatActivity {
 
     public static String orderId_,order_Detail;
@@ -57,6 +66,7 @@ public class currentorder_detail extends AppCompatActivity {
     private List<order_dataholder> list= new ArrayList<>();
 
     public SharedPreferences sharedPref;
+    private SharedPreferences vendorPref;
 
     ArrayList<HashMap> sharedList = new ArrayList<>();
 
@@ -75,6 +85,8 @@ public class currentorder_detail extends AppCompatActivity {
     ArrayList<String> prod_name = new ArrayList<String>();
     ArrayList<String> prod_quantity = new ArrayList<String>();
     ArrayList<String> prod_price = new ArrayList<String>();
+    private boolean isDispatch = false;
+    private String vendorPhone;
 
 
     @Override
@@ -92,6 +104,9 @@ public class currentorder_detail extends AppCompatActivity {
 
         Log.d("orderid",orderId_);
 
+        vendorPref = this.getSharedPreferences(
+                getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
+        vendorPhone = vendorPref.getString(getString(R.string.vendor_phone_key),null);
         layoutDeliveryBoyDetails = findViewById(R.id.deliveryBoyDetails);
         historyItems_recyclerView= findViewById(R.id.historyItems_recyclerView);
         move_back_iv= findViewById(R.id.move_back_iv);
@@ -143,6 +158,104 @@ public class currentorder_detail extends AppCompatActivity {
             }
         });
         loadNormalDeliveryData();
+
+        process_btn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(!isDispatch)
+                {
+                    callVendorPrepared();
+                }
+                else{
+                    callVendorDispatch();
+                }
+            }
+        });
+    }
+
+    private void callVendorDispatch()
+    {
+        dialog.show();
+        JsonObject requestObject = new JsonObject();
+        requestObject.addProperty("vendor_phone",vendorPhone);
+        requestObject.addProperty("order_id",orderId.getText().toString());
+        requestObject.addProperty("order_type","N");
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://gocoding.azurewebsites.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        Call<ItemSavingResponse> call = apiInterface.dispatchVendorOrder(requestObject);
+
+        call.enqueue(new Callback<ItemSavingResponse>()
+        {
+            @Override
+            public void onResponse(Call<ItemSavingResponse> call, Response<ItemSavingResponse> response)
+            {
+                if(response.isSuccessful()){
+                    dialog.dismiss();
+                    Toast.makeText(currentorder_detail.this, "Dispatch successfull " +
+                            response.body().getSuccess(), Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
+                else{
+                    dialog.dismiss();
+                    Toast.makeText(currentorder_detail.this, "Dispatch failure", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItemSavingResponse> call, Throwable t)
+            {
+                dialog.dismiss();
+                Toast.makeText(currentorder_detail.this, "Dispatch Failure" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void callVendorPrepared()
+    {
+        dialog.show();
+        JsonObject requestObject = new JsonObject();
+        requestObject.addProperty("vendor_phone",vendorPhone);
+        requestObject.addProperty("order_id","4bcb7126-4480-4a3c-a973-ade1ef7afc5b");
+        requestObject.addProperty("order_type","N");
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://gocoding.azurewebsites.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        Call<JsonObject> call = apiInterface.prepareOrder(requestObject);
+            System.out.println(requestObject.toString());
+        call.enqueue(new Callback<JsonObject>()
+        {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response)
+            {
+                if(response.isSuccessful()){
+                    dialog.dismiss();
+                    process_btn.setText("Dispatch");
+                    isDispatch = true;
+                    Toast.makeText(currentorder_detail.this, "Prepare order success", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    dialog.dismiss();
+                    Toast.makeText(currentorder_detail.this, "Order prepared failure", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t)
+            {
+                dialog.dismiss();
+                Toast.makeText(currentorder_detail.this, "Order prepared failure" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void saveOrderID(String orderId_) {
@@ -315,7 +428,7 @@ public class currentorder_detail extends AppCompatActivity {
                         adapter = new currentorder_detail_adapter(list,this);
                         historyItems_recyclerView.setAdapter(adapter);
                         adapter=null;
-                        list=new ArrayList<>();
+//                        list=new ArrayList<>();
                     }
                 }
             } catch (JSONException e) {

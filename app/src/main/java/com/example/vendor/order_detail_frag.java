@@ -2,7 +2,6 @@ package com.example.vendor;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,35 +14,34 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.Models.order_dataholder;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.Constants.ApiInterface;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-public class order_detail_frag extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+
+public class order_detail_frag extends Fragment
+{
 
     RecyclerView order_detail_recycler;
     RecyclerView.Adapter adapter = null;
@@ -51,6 +49,7 @@ public class order_detail_frag extends Fragment {
     ArrayList<String> productnamelist = new ArrayList<>();
     ArrayList<String> productquanlist = new ArrayList<>();
     private List<neworders_model> list = new ArrayList<>();
+    private SharedPreferences vendorPref;
 
     public static JSONArray array, arr, namearr, quanarr;
     public JSONObject obj, object;
@@ -75,11 +74,13 @@ public class order_detail_frag extends Fragment {
     ProgressDialog dialog;
 
     String temp2;
+    private String vendorPhone;
 
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
         View rootView = inflater.inflate(R.layout.frag_order_details, container, false);
         sharedPref = getContext().getSharedPreferences("myPref", Context.MODE_PRIVATE);
 
@@ -88,6 +89,9 @@ public class order_detail_frag extends Fragment {
         order_detail_recycler.setHasFixedSize(true);
         order_detail_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        vendorPref = getActivity().getSharedPreferences(
+                getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
+        vendorPhone = vendorPref.getString(getString(R.string.vendor_phone_key),null);
         date = rootView.findViewById(R.id.date);
         time = rootView.findViewById(R.id.time);
         tax = rootView.findViewById(R.id.tax);
@@ -115,19 +119,22 @@ public class order_detail_frag extends Fragment {
 
         temp2 = "new_orders" + orderid_;
 
-        new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 loadrecycler();
                 dialog.dismiss();
             }
         }, 200);
 
 
-        accept_btn.setOnClickListener(new View.OnClickListener() {
+        accept_btn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 ProgressDialog pdialog;
                 pdialog = new ProgressDialog(getContext()); // this = YourActivity
                 pdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -136,99 +143,61 @@ public class order_detail_frag extends Fragment {
                 pdialog.setIndeterminate(true);
                 pdialog.setCanceledOnTouchOutside(false);
                 pdialog.show();
+                Retrofit retrofit = new Retrofit.Builder().baseUrl("https://gocoding.azurewebsites.net/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-                ArrayList<JSONObject> orders = new ArrayList<JSONObject>();
-                JSONObject orders_ = new JSONObject();
+                ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
-                JSONObject op = new JSONObject();
-                try {
-                    op.put("order_id", orderid_);
-                    op.put("vendor_phone", "1");
-                    String str = sharedPref.getString(temp2, null);
-                    JSONObject object1 = new JSONObject(str);
-                    JSONArray arr5 = object1.getJSONArray("name");
-                    JSONArray jsonArray=object1.getJSONArray("quan");
-                    op.put("items", arr5);
-                    op.put("quantity", jsonArray);
+                JsonObject requestObject = new JsonObject();
+                requestObject.addProperty("order_id", orderid_);
+                requestObject.addProperty("vendor_phone", vendorPhone);
+                JsonArray items = new JsonArray();
+                JsonArray quantity = new JsonArray();
+                for (neworders_model product : list)
+                {
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    items.add(product.getProd_name());
+                    quantity.add(product.getProd_quan());
                 }
-                String outputreq = gson.toJson(op);
+                requestObject.add("items", items);
+                requestObject.add("quantity", quantity);
+                System.out.println("Request object is" + requestObject.toString());
+                Call<JsonObject> call = apiInterface.getSubscriptionResponse(requestObject);
 
-                Log.d("response", String.valueOf(op));
+                call.enqueue(new Callback<JsonObject>()
+                {
 
-
-
-                try {
-                    HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_sent).openConnection()));
-                    httpcon.setDoOutput(true);
-                    httpcon.setRequestProperty("Content-Type", "application/json");
-                    httpcon.setRequestProperty("Accept", "application/json");
-                    httpcon.setRequestMethod("POST");
-                    httpcon.connect();
-
-                    OutputStream os = httpcon.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(String.valueOf(op));
-                    writer.close();
-                    os.close();
-
-                    BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "UTF-8"));
-
-                    String line = null;
-                    StringBuilder sb = new StringBuilder();
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            Toast.makeText(getContext(), "Accept successfull", Toast.LENGTH_SHORT).show();
+                            pdialog.dismiss();
+                        } else
+                        {
+                            Toast.makeText(getContext(), "Accept error", Toast.LENGTH_SHORT).show();
+                            pdialog.dismiss();
+                        }
                     }
 
-                    br.close();
-                    Log.d("comingdata", sb.toString());
-                    response = sb.toString();
-                    pdialog.dismiss();
-                    Toast.makeText(getContext(),"Done", Toast.LENGTH_LONG).show();
-
-
-                } catch (MalformedURLException e) {
-                    pdialog.dismiss();
-                    e.printStackTrace();
-                    Log.d("MalformedURLException", e.getMessage());
-                    Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
-                } catch (ProtocolException e) {
-                    pdialog.dismiss();
-                    e.printStackTrace();
-                    Log.d("ProtocolException", e.getMessage());
-                    Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    pdialog.dismiss();
-                    e.printStackTrace();
-                    Log.d("IOException", e.getMessage());
-                    Toast.makeText(getContext(),"Not Accepted", Toast.LENGTH_LONG).show();
-                }
-
-                try {
-                    JSONObject o9 = new JSONObject(response);
-                    String check = o9.getString("success");
-                    if (check.equals("Accepted")) {
-                        Intent i = new Intent(getContext(), MainActivity_.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(i);
-                    } else {
-                        Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t)
+                    {
+                        Toast.makeText(getContext(), "Accept error " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        pdialog.dismiss();
                     }
-
-                } catch (JSONException e) {
-                    Toast.makeText(getContext(), "not accepted", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-
+                });
             }
         });
 
-        reject_tv.setOnClickListener(new View.OnClickListener() {
+        reject_tv.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
+
 
                 ProgressDialog pdialog;
                 pdialog = new ProgressDialog(getContext()); // this = YourActivity
@@ -238,81 +207,46 @@ public class order_detail_frag extends Fragment {
                 pdialog.setIndeterminate(true);
                 pdialog.setCanceledOnTouchOutside(false);
                 pdialog.show();
+                Retrofit retrofit = new Retrofit.Builder().baseUrl("https://gocoding.azurewebsites.net/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-                JSONObject op = new JSONObject();
-                try {
-                    op.put("order_id", orderid_);
-                    op.put("vendor_phone", "1");
-                    String str = sharedPref.getString(temp2, null);
-                    JSONObject object1 = new JSONObject(str);
-                    JSONArray arr5 = new JSONArray();
-                    JSONArray jsonArray= new JSONArray();
-                    op.put("items", arr5);
-                    op.put("quantity", jsonArray);
+                ApiInterface apiInterface = retrofit.create(ApiInterface.class);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                JsonObject requestObject = new JsonObject();
+                requestObject.addProperty("order_id", orderid_);
+                requestObject.addProperty("vendor_phone", vendorPhone);
+                JsonArray items = new JsonArray();
+                JsonArray quantity = new JsonArray();
+                requestObject.add("items", items);
+                requestObject.add("quantity", quantity);
+                System.out.println("Request object is" + requestObject.toString());
+                Call<JsonObject> call = apiInterface.getSubscriptionResponse(requestObject);
 
-                try {
-                    HttpURLConnection httpcon = (HttpURLConnection) ((new URL(url_sent).openConnection()));
-                    httpcon.setDoOutput(true);
-                    httpcon.setRequestProperty("Content-Type", "application/json");
-                    httpcon.setRequestProperty("Accept", "application/json");
-                    httpcon.setRequestMethod("POST");
-                    httpcon.connect();
+                call.enqueue(new Callback<JsonObject>()
+                {
 
-                    OutputStream os = httpcon.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(String.valueOf(op));
-                    writer.close();
-                    os.close();
-
-                    BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "UTF-8"));
-
-                    String line = null;
-                    StringBuilder sb = new StringBuilder();
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            Toast.makeText(getContext(), "Reject successfull", Toast.LENGTH_SHORT).show();
+                            pdialog.dismiss();
+                        } else
+                        {
+                            Toast.makeText(getContext(), "Reject error", Toast.LENGTH_SHORT).show();
+                            pdialog.dismiss();
+                        }
                     }
 
-                    br.close();
-                    Log.d("comingdata", sb.toString());
-                    response = sb.toString();
-                    pdialog.dismiss();
-                    Toast.makeText(getContext(),"done",Toast.LENGTH_LONG).show();
-
-                } catch (MalformedURLException e) {
-                    pdialog.dismiss();
-                    e.printStackTrace();
-                    Log.d("MalformedURLException", e.getMessage());
-                } catch (ProtocolException e) {
-                    pdialog.dismiss();
-                    e.printStackTrace();
-                    Log.d("ProtocolException", e.getMessage());
-                } catch (IOException e) {
-                    pdialog.dismiss();
-                    e.printStackTrace();
-                    Log.d("IOException", e.getMessage());
-
-                }
-
-                try {
-                    JSONObject o9 = new JSONObject(response);
-                    String check = o9.getString("success");
-                    if (check.equals("Rejected")) {
-                        Intent i = new Intent(getContext(), MainActivity_.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(i);
-                    } else {
-                        Toast.makeText(getContext(), "not rejected", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t)
+                    {
+                        Toast.makeText(getContext(), "Accept error " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        pdialog.dismiss();
                     }
-
-                } catch (JSONException e) {
-                    Toast.makeText(getContext(), "not rejected", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
+                });
             }
         });
 
@@ -320,15 +254,18 @@ public class order_detail_frag extends Fragment {
 
     }
 
-    public void loadrecycler() {
-        try {
+    public void loadrecycler()
+    {
+        try
+        {
             String jsonGet = sharedPref.getString("newordernotify", null);
             JSONObject ob = new JSONObject(jsonGet);
 
-            Log.d("second",jsonGet);
+            Log.d("second", jsonGet);
 
             JSONArray array = ob.getJSONArray("list");
-            for (int i = 0; i < array.length(); i++) {
+            for (int i = 0; i < array.length(); i++)
+            {
                 JSONObject object = array.getJSONObject(i);
                 if (orderid_.equals(object.getString("order_id"))) ;
                 {
@@ -341,7 +278,8 @@ public class order_detail_frag extends Fragment {
                     namearr = object.getJSONArray("total_order");
                     quanarr = object.getJSONArray("quantity");
 
-                    if(!sharedPref.contains(temp2)) {
+                    if (!sharedPref.contains(temp2))
+                    {
                         HashMap<String, JSONArray> hashMap = new HashMap<>();
                         hashMap.put("name", namearr);
                         hashMap.put("quan", quanarr);
@@ -354,11 +292,13 @@ public class order_detail_frag extends Fragment {
                     String str = sharedPref.getString(temp2, null);
                     JSONObject object1 = new JSONObject(str);
                     arr = object1.getJSONArray("name");
-                    for (int j = 0; j < arr.length(); j++) {
+                    for (int j = 0; j < arr.length(); j++)
+                    {
                         productnamelist.add(arr.getString(j));
                     }
                     arr = object1.getJSONArray("quan");
-                    for (int j = 0; j < arr.length(); j++) {
+                    for (int j = 0; j < arr.length(); j++)
+                    {
                         productquanlist.add(arr.getString(j));
                     }
                 }
@@ -367,18 +307,20 @@ public class order_detail_frag extends Fragment {
             time_order = time.getText().toString();
             totalprice_order = totalcost.getText().toString();
 
-            for (int i = 0; i < arr.length(); i++) {
+            for (int i = 0; i < arr.length(); i++)
+            {
                 neworders_model List = new neworders_model(productnamelist.get(i), productquanlist.get(i));
                 list.add(List);
             }
             adapter = new orderdetail_adapter(list, getActivity());
             order_detail_recycler.setAdapter(adapter);
             adapter = null;
-            list = new ArrayList<>();
+//            list = new ArrayList<>();
             dialog.dismiss();
 
 
-        } catch (JSONException ex) {
+        } catch (JSONException ex)
+        {
             ex.printStackTrace();
         }
     }

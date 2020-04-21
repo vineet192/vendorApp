@@ -39,6 +39,7 @@ public class new_subscription_frag extends Fragment {
     private ArrayList<subscription_dataholder> listOrders;
     List<subscription_dataholder> list = new ArrayList<>();
     public static boolean active = false;
+    private SharedPreferences vendorPref;
 
     ArrayList<String> orderID = new ArrayList<>();
     ArrayList<String> startdate = new ArrayList<>();

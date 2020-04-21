@@ -56,10 +56,21 @@ ApiInterface {
     @POST("vendor/delivery_details/")
     Call<DeleiveryBoy> getDeleiveryBoy(@Field("vendor_phone") String phone_no, @Field("order_id") String order_id);
 
-    @FormUrlEncoded
+
+    @POST("vendor/dispatch/")
+    Call<ItemSavingResponse> dispatchVendorOrder(@Body JsonObject order);
+
     @POST("vendor/dispatch/")
     Call<ItemSavingResponse> dispatchOrder(@Field("vendor_phone") String phone_no, @Field("order_id") String order_id);
 
+    @POST("vendor/prepared/")
+    Call<JsonObject> prepareOrder(@Body JsonObject order);
+
+    @POST("suscriptionresponse/")
+    Call<JsonObject> getSubscriptionResponse(@Body JsonObject order);
+
+    @POST("vendorresponse/")
+    Call<JsonObject> getProductResponse(@Body JsonObject order);
 
     @POST("vendor/activate/")
     Call<StatusResponse> setStatus(@Field("vendor_phone") String phone_no, @Field("status") String status);

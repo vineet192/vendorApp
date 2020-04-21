@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.Constants.ApiInterface;
-import com.example.Models.LoginRequest;
 import com.example.Models.LoginResponse;
 import com.example.Models.ResponseServerToken;
 import com.example.Models.TokenKeySaveRequest;
@@ -88,9 +87,9 @@ public class LoginActivity extends AppCompatActivity
         SharedPreferences sharedPref = LoginActivity.this.getSharedPreferences(
                 getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
 
-        if(!sharedPref.getString(getString(R.string.vendor_id_key),"default").equals("default"))
+        if (!sharedPref.getString(getString(R.string.vendor_id_key), "default").equals("default"))
         {
-            Intent in = new Intent(LoginActivity.this,MainActivity_.class);
+            Intent in = new Intent(LoginActivity.this, MainActivity_.class);
             startActivity(in);
             finish();
         }
@@ -112,13 +111,14 @@ public class LoginActivity extends AppCompatActivity
                 loginButton.setVisibility(View.VISIBLE);
                 loginLoader.setVisibility(View.GONE);
                 Log.d("failtoget", String.valueOf(e));
-                Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Firebase verification failed", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken)
             {
                 super.onCodeSent(s, forceResendingToken);
+                Toast.makeText(LoginActivity.this, "On code sent", Toast.LENGTH_SHORT).show();
                 verificationId = s;
                 loginButton.setVisibility(View.GONE);
                 vendorID.setVisibility(View.GONE);
@@ -168,13 +168,13 @@ public class LoginActivity extends AppCompatActivity
 
                         vendorDetails = response.body();
 
-                        String ph="+917578968856";
+                        phone = "+16505553434";
 
                         //Replace this phone number with response.body().getVendor_phone() or a valid phone number.
 
                         //Verifying phone number with firebase and sending sms code.
                         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                                ph,        // Phone number to verify
+                                phone,        // Phone number to verify
                                 60,                 // Timeout duration
                                 TimeUnit.SECONDS,   // Unit of timeout
                                 LoginActivity.this,               // Activity (for callback binding)
@@ -244,18 +244,21 @@ public class LoginActivity extends AppCompatActivity
 
                             final String[] token = new String[1];
                             FirebaseInstanceId.getInstance().getInstanceId()
-                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>()
+                                    {
                                         @Override
-                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                            if (!task.isSuccessful()) {
-                                                Log.d("Task : ", "Hi getInstanceId failed * "+task.getException());
+                                        public void onComplete(@NonNull Task<InstanceIdResult> task)
+                                        {
+                                            if (!task.isSuccessful())
+                                            {
+                                                Log.d("Task : ", "Hi getInstanceId failed * " + task.getException());
                                                 return;
                                                 //Remember that there is error in generating token if mobile is not connected to internet.
                                             }
                                             token[0] = task.getResult().getToken();
-                                            Log.d("tokenSent to server ",""+token[0]);
+                                            Log.d("tokenSent to server ", "" + token[0]);
                                             Log.d("InstanceId(Token) : ", token[0]);
-                                            saveTokenToServer(token[0],vendorDetails.getVendor_phone());
+                                            saveTokenToServer(token[0], vendorDetails.getVendor_phone());
                                         }
                                     });
 
@@ -268,12 +271,12 @@ public class LoginActivity extends AppCompatActivity
                             editor.putString(getString(R.string.vendor_id_key), vendorDetails.getVendor_id());
                             editor.putString(getString(R.string.vendor_found_key), vendorDetails.getFound());
                             editor.putString(getString(R.string.vendor_image_key), vendorDetails.getImagePath());
-                            editor.putString(getString(R.string.vendor_city_key),vendorDetails.getVendor_city());
-                            editor.putString(getString(R.string.vendor_address_key),vendorDetails.getVendor_address());
+                            editor.putString(getString(R.string.vendor_city_key), vendorDetails.getVendor_city());
+                            editor.putString(getString(R.string.vendor_address_key), vendorDetails.getVendor_address());
                             editor.putString("fcm_token", token[0]);
-                            editor.putString("vendor_lat",vendorDetails.getVendor_lat());
-                            editor.putString("vendor_long",vendorDetails.getVendor_long());
-                            Toast.makeText(getApplicationContext(),vendorDetails.getVendor_lat(),Toast.LENGTH_LONG).show();
+                            editor.putString("vendor_lat", vendorDetails.getVendor_lat());
+                            editor.putString("vendor_long", vendorDetails.getVendor_long());
+                            Toast.makeText(getApplicationContext(), vendorDetails.getVendor_lat(), Toast.LENGTH_LONG).show();
 
 
                             if (sharedPref.getString(getString(R.string.vendor_active_status_key), "default").equals("default"))
@@ -298,7 +301,8 @@ public class LoginActivity extends AppCompatActivity
                 });
     }
 
-    private void saveTokenToServer(String token,String phone) {
+    private void saveTokenToServer(String token, String phone)
+    {
         ApiInterface apiInterface = retrofit.create(ApiInterface.class);
         String requestStr = "{" +
                 "                    'vendor_phone' : '" + phone + "',\n" +
@@ -308,22 +312,26 @@ public class LoginActivity extends AppCompatActivity
         TokenKeySaveRequest tokenKeySaveRequest = new Gson().fromJson(requestStr, TokenKeySaveRequest.class);
 
         Call<ResponseServerToken> call = apiInterface.saveFcmToken(tokenKeySaveRequest);
-        call.enqueue(new Callback<ResponseServerToken>() {
+        call.enqueue(new Callback<ResponseServerToken>()
+        {
             @Override
-            public void onResponse(Call<ResponseServerToken> call, Response<ResponseServerToken> response) {
-                Log.d("repons.issuccessfull() ",""+response.isSuccessful());
-                Log.d("response",""+response.body());
-                if(response.isSuccessful()){
-                    Log.d("token ",""+token);
-                    Log.d("responseSuccessful",""+response.body());
+            public void onResponse(Call<ResponseServerToken> call, Response<ResponseServerToken> response)
+            {
+                Log.d("repons.issuccessfull() ", "" + response.isSuccessful());
+                Log.d("response", "" + response.body());
+                if (response.isSuccessful())
+                {
+                    Log.d("token ", "" + token);
+                    Log.d("responseSuccessful", "" + response.body());
                     Toast.makeText(LoginActivity.this, "Token Saved Successfully", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseServerToken> call, Throwable t) {
-                Log.d("responseUNSuccessful",""+t.getMessage());
-                Toast.makeText(getApplicationContext(),"token not saved",Toast.LENGTH_LONG).show();
+            public void onFailure(Call<ResponseServerToken> call, Throwable t)
+            {
+                Log.d("responseUNSuccessful", "" + t.getMessage());
+                Toast.makeText(getApplicationContext(), "token not saved", Toast.LENGTH_LONG).show();
             }
         });
     }
