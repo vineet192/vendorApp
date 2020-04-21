@@ -13,26 +13,36 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.Constants.ApiInterface;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
+import com.example.Models.DeleiveryBoy;
+import com.example.Models.order_dataholder;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +55,7 @@ public class order_detail_frag extends Fragment
 
     RecyclerView order_detail_recycler;
     RecyclerView.Adapter adapter = null;
-
+    ArrayList<order_dataholder> listOrders;
     ArrayList<String> productnamelist = new ArrayList<>();
     ArrayList<String> productquanlist = new ArrayList<>();
     private List<neworders_model> list = new ArrayList<>();
@@ -132,9 +142,8 @@ public class order_detail_frag extends Fragment
 
         accept_btn.setOnClickListener(new View.OnClickListener()
         {
-            @Override
-            public void onClick(View view)
-            {
+           
+            public void onClick(View view) {
                 ProgressDialog pdialog;
                 pdialog = new ProgressDialog(getContext()); // this = YourActivity
                 pdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -164,7 +173,6 @@ public class order_detail_frag extends Fragment
                 requestObject.add("quantity", quantity);
                 System.out.println("Request object is" + requestObject.toString());
                 Call<JsonObject> call = apiInterface.getSubscriptionResponse(requestObject);
-
                 call.enqueue(new Callback<JsonObject>()
                 {
 
@@ -189,6 +197,10 @@ public class order_detail_frag extends Fragment
                         pdialog.dismiss();
                     }
                 });
+
+                loadNewOrderData();
+                DeleteFomList(orderid_);
+                saveNewOrderData(listOrders);
             }
         });
 
@@ -197,8 +209,6 @@ public class order_detail_frag extends Fragment
             @Override
             public void onClick(View view)
             {
-
-
                 ProgressDialog pdialog;
                 pdialog = new ProgressDialog(getContext()); // this = YourActivity
                 pdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -247,6 +257,10 @@ public class order_detail_frag extends Fragment
                         pdialog.dismiss();
                     }
                 });
+              
+                loadNewOrderData();
+                DeleteFomList(orderid_);
+                saveNewOrderData(listOrders);
             }
         });
 
@@ -254,10 +268,38 @@ public class order_detail_frag extends Fragment
 
     }
 
-    public void loadrecycler()
-    {
-        try
-        {
+    public void saveNewOrderData(ArrayList<order_dataholder> list) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for newOrder", getActivity().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString("list", json);
+        editor.apply();
+        Log.d("listSaved",""+list.toString());
+    }
+
+    public void  loadNewOrderData(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences for newOrder", getActivity().MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("list", null);
+        Type type = new TypeToken<ArrayList<order_dataholder>>() {}.getType();
+        listOrders = gson.fromJson(json, type);
+
+        if (listOrders == null) {
+            listOrders = new ArrayList<>();
+        }
+    }
+
+    public void DeleteFomList(String OrderID){
+        for(int i=0;i<listOrders.size();i++){
+            order_dataholder delBoy = listOrders.get(i);
+            if(delBoy.getOrderID().equals(OrderID))
+                listOrders.remove(i);
+        }
+    }
+
+    public void loadrecycler() {
+        try {
             String jsonGet = sharedPref.getString("newordernotify", null);
             JSONObject ob = new JSONObject(jsonGet);
 

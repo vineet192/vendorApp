@@ -61,10 +61,18 @@ public class currentsubs_detail extends AppCompatActivity {
         Intent intent = getIntent();
         orderId_=intent.getStringExtra("orderId");
         order_Detail=intent.getStringExtra("orderDetail");
+        if(orderId_!=null)
+            saveOrderIdData(orderId_);
+        else if(orderId_==null)
+            loadOrderIdData();
         Log.d("orderIDCurrentSub",""+orderId_);
         Log.d("order_DetailCurrentSub",""+order_Detail);
         orderid.setText(orderId_);
 
+        String a = intent.getStringExtra("checkForLaunch");
+        if(a!=null && a.equals("yes")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.frag, new current_subs_detail_frag()).commit();
+        }
 //        schedule_ly= findViewById(R.id.schedule_ly);
 //        subscription_ly= findViewById(R.id.subscription_ly);
 //        schedule_tv= findViewById(R.id.schedule_tv);
@@ -181,5 +189,17 @@ public class currentsubs_detail extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 //        }
+    }
+    public void saveOrderIdData(String orderId){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared_for_orderId_subDetailAct",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("orderId",orderId);
+        editor.apply();
+    }
+
+    private void loadOrderIdData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared_for_orderId_subDetailAct",MODE_PRIVATE);
+        String orderID = sharedPreferences.getString("orderId",null);
+        orderId_=orderID;
     }
 }

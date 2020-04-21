@@ -23,6 +23,7 @@ import com.example.Models.order_dataholder;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,6 +109,7 @@ public class currentorder_detail extends AppCompatActivity {
                 getString(R.string.shared_preference_key), Context.MODE_PRIVATE);
         vendorPhone = vendorPref.getString(getString(R.string.vendor_phone_key),null);
         layoutDeliveryBoyDetails = findViewById(R.id.deliveryBoyDetails);
+
         historyItems_recyclerView= findViewById(R.id.historyItems_recyclerView);
         move_back_iv= findViewById(R.id.move_back_iv);
         phonenumber= findViewById(R.id.phonenumber);
@@ -122,8 +124,6 @@ public class currentorder_detail extends AppCompatActivity {
         deliveryboy_name= findViewById(R.id.deliveryboy_name);
         totalcost= findViewById(R.id.totalcost);
         deliveryboy_arivingstatus= findViewById(R.id.deliveryboy_arivingstatus);
-        deliveryboy_vehicle= findViewById(R.id.deliveryboy_vehicle);
-        deliveryboy_otp= findViewById(R.id.deliveryboy_otp);
         process_btn= findViewById(R.id.process_btn);
 
         dialog = new ProgressDialog(this); // this = YourActivity
@@ -157,6 +157,7 @@ public class currentorder_detail extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+        //layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
         loadNormalDeliveryData();
 
         process_btn.setOnClickListener(new View.OnClickListener()
@@ -268,37 +269,8 @@ public class currentorder_detail extends AppCompatActivity {
     private void loadOrderId(){
         SharedPreferences sharedPreferences = getSharedPreferences("shared_for_orderId",MODE_PRIVATE);
         String orderID = sharedPreferences.getString("orderId",null);
-        orderId_.equals(orderID);
+        orderId_=orderID;
     }
-
-//    public void  loadDeliveryBoyDetailsData(){
-//        Log.d("loadDeliveryBoy","called");
-//            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences for deliveryBoyDetails", MODE_PRIVATE);
-//            Gson gson = new Gson();
-//            Type type = new TypeToken<ArrayList<DeleiveryBoy>>() {}.getType();
-//                String json = sharedPreferences.getString("listNormalDeliveryBoy", "pagal");
-//                listDeliveryBoy = gson.fromJson(json, type);
-//                Log.d("listDeliveryBoy",""+listDeliveryBoy);
-//                if (listDeliveryBoy == null) {
-//                    listDeliveryBoy = new ArrayList<>();
-//                }
-//
-//                for(int i=0;i<listDeliveryBoy.size();i++){
-//                    DeleiveryBoy currentBoy = listDeliveryBoy.get(i);
-//                    Log.d("DeliveryBoys ",currentBoy.getDel_boy_name()+"*"+currentBoy.getDel_boy_phone()+"*"+currentBoy
-//                    .getOrder_id());
-//                    if(currentBoy.getOrder_id().equals(orderId_)){
-//                        Log.d("currentBoy ",currentBoy.getDel_boy_name()+"*"+currentBoy.getDel_boy_phone()+"*"+currentBoy
-//                                .getOrder_id());
-//                        layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
-//                        deliveryboy_name.setText(currentBoy.getDel_boy_name());
-//                        deliveryboy_vehicle.setText(currentBoy.getDel_boy_phone());
-//                        deliveryyboyimage.setImageURI(Uri.parse(currentBoy.getPhotoUrl()));
-//                        if(currentBoy.getArrived())
-//                            deliveryboy_arivingstatus.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//        }
 
     public void  loadNormalDeliveryData(){
         Log.d("loadDeliveryBoy","called");
@@ -315,9 +287,10 @@ public class currentorder_detail extends AppCompatActivity {
             DeleiveryBoy currentBoy = listDeliveryBoy.get(i);
             if(currentBoy.getOrder_id().equals(orderId_)){
                 layoutDeliveryBoyDetails.setVisibility(View.VISIBLE);
-                deliveryboy_name.setText(currentBoy.getDel_boy_name());
-                deliveryboy_vehicle.setText(currentBoy.getDel_boy_phone());
-                deliveryyboyimage.setImageURI(Uri.parse(currentBoy.getPhotoUrl()));
+                deliveryboy_name.setText(currentBoy.getDel_boy_name()+"\n"+currentBoy.getDel_boy_phone());
+                Picasso.get().load(Uri.parse(currentBoy.getPhotoUrl())).placeholder(R.mipmap.ic_launcher).into(deliveryyboyimage);
+                Log.d("DataFromCurrentBoy",currentBoy.getDel_boy_name()+currentBoy.getDel_boy_phone()+"*"+currentBoy.getPhotoUrl());
+                Log.d("currentBoy.getArrived()",""+currentBoy.getArrived());
                 if(currentBoy.getArrived())
                     deliveryboy_arivingstatus.setVisibility(View.VISIBLE);
             }
@@ -398,14 +371,9 @@ public class currentorder_detail extends AppCompatActivity {
                         date.setText(object.getString("date"));
                         time.setText(object.getString("time"));
                         packing_status.setText(("waiting"));
-                        deliveryboy_arivingstatus.setText(("waiting"));
-                        deliveryboy_vehicle.setText(("waiting"));
-                        deliveryboy_otp.setText(object.getString("otp"));
                         totalcost.setText(object.getString("price"));
                         tax.setText(("tax"));
                         deliverycharge.setText(("delivery_charge"));
-                        deliveryboy_name.setText(("waiting"));
-                        delivery_boy_phone=object.getString("delivery_boy_phone");
 
                         //set image
 

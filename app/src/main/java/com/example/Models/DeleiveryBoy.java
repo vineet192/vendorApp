@@ -19,7 +19,7 @@ public class DeleiveryBoy implements Serializable {
         isArrived = arrived;
     }
 
-    Boolean isArrived;
+    Boolean isArrived = false;
 
     public String getOrder_type() {
         return order_type;
